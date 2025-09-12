@@ -7,6 +7,13 @@ public class PostInMemoryRepository : IPostRepository
 {
     List<Post> posts = new List<Post>();
     
+    // Constructor
+    public PostInMemoryRepository()
+    {
+        // Create Initial Dummy Data Here
+        Post PostOne = new Post(1, "Post One", 1, 1) ;
+
+    }
     public Task<Post> AddAsync(Post post)
     {
         post.Id = posts.Any()
