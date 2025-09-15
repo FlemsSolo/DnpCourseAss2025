@@ -26,7 +26,7 @@ public class CLI_App
             Console.WriteLine("MAIN MENU");
             Console.WriteLine("1. Manage Users");
             Console.WriteLine("2. Manage Posts");
-            Console.WriteLine("3. Manage Comments");
+            //Console.WriteLine("3. Manage Comments");
             Console.WriteLine("0. Exit");
             Console.Write("Choice: ");
 
