@@ -11,7 +11,7 @@ public class PostInMemoryRepository : IPostRepository
     public PostInMemoryRepository()
     {
         // Create Initial Dummy Data Here
-        Post PostOne = new Post(1, "Post One", 1, 1) ;
+        Post PostOne = new Post(1, "Post One", "Post Body",1, 1) ;
 
     }
     public Task<Post> AddAsync(Post post)
