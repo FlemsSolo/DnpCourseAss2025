@@ -5,8 +5,8 @@ namespace CLI.UI.ManagePosts;
 public class ManagePostsView
 {
     private readonly IPostRepository postRepository;
-    private readonly ICommentRepository commentRepository;
     private readonly IUserRepository userRepository;
+    private readonly ICommentRepository commentRepository;
 
     public ManagePostsView(IPostRepository postRepository,
         IUserRepository userRepository, ICommentRepository commentRepository)
@@ -52,7 +52,7 @@ public class ManagePostsView
                         userRepository, commentRepository);
                     await singlePost.GetSinglePostAsync();
                     break;
-                case "0" :
+                case "0":
                     return;
                 default:
                     Console.WriteLine("Invalid choice, try again.");

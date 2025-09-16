@@ -17,21 +17,19 @@ public class CreatePostView
         Console.WriteLine("CREATE POST");
 
         Console.Write("Title: ");
-        string title = Console.ReadLine();
+        var title = Console.ReadLine();
 
         Console.Write("Body: ");
-        string body = Console.ReadLine();
-        
+        var body = Console.ReadLine();
+
         int forumId;
         while (true)
         {
             Console.Write("Forum id: ");
-            string? forumIdInput = Console.ReadLine();
+            var forumIdInput = Console.ReadLine();
 
-            if (int.TryParse(forumIdInput, out forumId))
-            {
-                break; // valid forum id
-            }
+            if (int.TryParse(forumIdInput,
+                    out forumId)) break; // valid forum id
 
             Console.WriteLine("Invalid forum id");
         }
@@ -40,29 +38,20 @@ public class CreatePostView
         while (true)
         {
             Console.Write("User id: ");
-            string? userIdInput = Console.ReadLine();
+            var userIdInput = Console.ReadLine();
 
-            if (int.TryParse(userIdInput, out userId))
-            {
-                break; // valid user id
-            }
+            if (int.TryParse(userIdInput, out userId)) break; // valid user id
 
             Console.WriteLine("Invalid user id");
         }
 
-        if (string.IsNullOrWhiteSpace(title))
-        {
-            title = "Unknown title";
-        }
+        if (string.IsNullOrWhiteSpace(title)) title = "Unknown title";
 
-        if (string.IsNullOrWhiteSpace(body))
-        {
-            body = "Unknown body";
-        }
+        if (string.IsNullOrWhiteSpace(body)) body = "Unknown body";
 
-        Post post = new Post(0, title, body, forumId, 
+        var post = new Post(0, title, body, forumId,
             userId);
-        Post created = await postRepository.AddAsync(post);
+        var created = await postRepository.AddAsync(post);
         Console.WriteLine($"Post with id {created.Id} successfully created");
     }
 }

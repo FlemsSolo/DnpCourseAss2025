@@ -1,5 +1,4 @@
-﻿using Entities;
-using RepositoryContracts;
+﻿using RepositoryContracts;
 
 namespace CLI.UI.ManagePosts;
 
@@ -15,8 +14,8 @@ public class DeletePostView
     public async Task DeletePostAsync()
     {
         Console.Write("Enter post id for post to delete: ");
-        string? input = Console.ReadLine();
-        if (!int.TryParse(input, out int postId))
+        var input = Console.ReadLine();
+        if (!int.TryParse(input, out var postId))
         {
             Console.WriteLine("Invalid post id.");
             return;

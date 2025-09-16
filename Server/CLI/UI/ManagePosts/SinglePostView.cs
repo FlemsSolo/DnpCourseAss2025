@@ -6,9 +6,9 @@ namespace CLI.UI.ManagePosts;
 // You can view a single post and afterward add/edit/delete a comment on the post
 public class SinglePostView
 {
+    private readonly ICommentRepository commentRepository;
     private readonly IPostRepository postRepository;
     private readonly IUserRepository userRepository;
-    private readonly ICommentRepository commentRepository;
 
     public SinglePostView(IPostRepository postRepository,
         IUserRepository userRepository, ICommentRepository commentRepository)
@@ -23,15 +23,15 @@ public class SinglePostView
         Console.WriteLine("SINGLE POST MENU");
         Console.Write("Enter post id:");
 
-        string? input = Console.ReadLine();
+        var input = Console.ReadLine();
 
-        if (!int.TryParse(input, out int id))
+        if (!int.TryParse(input, out var id))
         {
             Console.WriteLine("Invalid post id.");
             return;
         }
 
-        Post post = await postRepository.GetSingleAsync(id);
+        var post = await postRepository.GetSingleAsync(id);
         if (post == null)
         {
             Console.WriteLine("Post not found");
@@ -78,7 +78,7 @@ public class SinglePostView
         Console.WriteLine("Comments:");
         foreach (var comment in comments)
         {
-            User user = await userRepository.GetSingleAsync(comment.UserId);
+            var user = await userRepository.GetSingleAsync(comment.UserId);
             Console.WriteLine($"{comment.Body} (by {user.Name})");
         }
     }
@@ -86,8 +86,8 @@ public class SinglePostView
     private async Task AddCommentAsync(int postId)
     {
         Console.Write("Enter user id: ");
-        string? input = Console.ReadLine();
-        if (!int.TryParse(input, out int userId))
+        var input = Console.ReadLine();
+        if (!int.TryParse(input, out var userId))
         {
             Console.WriteLine("Invalid user id.");
             return;
@@ -101,24 +101,24 @@ public class SinglePostView
         }
 
         Console.Write("Comment body: ");
-        string? body = Console.ReadLine();
+        var body = Console.ReadLine();
 
-        Comment comment = new Comment(0, body, postId, userId);
-        Comment created = await commentRepository.AddAsync(comment);
+        var comment = new Comment(0, body, postId, userId);
+        var created = await commentRepository.AddAsync(comment);
         Console.WriteLine($"Comment with id {created.Id} successfully created");
     }
 
     private async Task EditCommentAsync(int postId)
     {
         Console.Write("Enter comment id to edit: ");
-        string? input = Console.ReadLine();
-        if (!int.TryParse(input, out int commentId))
+        var input = Console.ReadLine();
+        if (!int.TryParse(input, out var commentId))
         {
             Console.WriteLine("Invalid comment id.");
             return;
         }
 
-        Comment comment = await commentRepository.GetSingleAsync(commentId);
+        var comment = await commentRepository.GetSingleAsync(commentId);
         if (comment == null ||
             comment.PostId !=
             postId) // If the comment isn't posted on this post
@@ -128,7 +128,7 @@ public class SinglePostView
         }
 
         Console.Write("New body: ");
-        string? newBody = Console.ReadLine();
+        var newBody = Console.ReadLine();
 
         comment.Body = newBody;
 
@@ -139,14 +139,14 @@ public class SinglePostView
     private async Task DeleteCommentAsync(int postId)
     {
         Console.Write("Enter comment id to delete: ");
-        string? input = Console.ReadLine();
-        if (!int.TryParse(input, out int commentId))
+        var input = Console.ReadLine();
+        if (!int.TryParse(input, out var commentId))
         {
             Console.WriteLine("Invalid comment id.");
             return;
         }
 
-        Comment comment = await commentRepository.GetSingleAsync(commentId);
+        var comment = await commentRepository.GetSingleAsync(commentId);
         if (comment == null ||
             comment.PostId !=
             postId) // If the comment isn't posted on this post

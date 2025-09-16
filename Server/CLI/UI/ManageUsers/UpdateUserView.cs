@@ -1,5 +1,4 @@
-﻿using Entities;
-using RepositoryContracts;
+﻿using RepositoryContracts;
 
 namespace CLI.UI.ManageUsers;
 
@@ -16,22 +15,22 @@ public class UpdateUserView
     {
         Console.WriteLine("UPDATE USER");
         Console.Write("Enter user id to edit: ");
-        string? input = Console.ReadLine();
-        if (!int.TryParse(input, out int userId))
+        var input = Console.ReadLine();
+        if (!int.TryParse(input, out var userId))
         {
             Console.WriteLine("Invalid user id.");
             return;
         }
 
-        User user = await userRepository.GetSingleAsync(userId);
-        
+        var user = await userRepository.GetSingleAsync(userId);
+
         Console.Write("New Username: ");
-        string? newUsername = Console.ReadLine();
+        var newUsername = Console.ReadLine();
 
         user.Name = newUsername;
-        
+
         Console.Write("New password: ");
-        string? newPassword = Console.ReadLine();
+        var newPassword = Console.ReadLine();
 
         user.PW = newPassword;
 

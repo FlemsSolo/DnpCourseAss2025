@@ -16,8 +16,6 @@ public class ListPostsView
         Console.WriteLine("POSTS");
 
         foreach (var post in postRepository.GetMany())
-        {
             Console.WriteLine($"[{post.Title}, {post.Id}]");
-        }
     }
 }

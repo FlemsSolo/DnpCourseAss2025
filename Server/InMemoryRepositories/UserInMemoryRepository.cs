@@ -7,6 +7,16 @@ public class UserInMemoryRepository : IUserRepository
 {
     List<User> users = new List<User>();
     
+    // Constructor
+    public UserInMemoryRepository()
+    {
+        // Create Initial Dummy Data Here
+        //User UserOne = new User(1, "Mickey Moose", "Very Secret");
+        //users.Add(UserOne);
+        //User UserTwo = new User(2, "Minnie Moose", "Very Secret");
+        //users.Add(UserTwo);
+    }
+
     public Task<User> AddAsync(User user)
     {
         user.Id = users.Any()

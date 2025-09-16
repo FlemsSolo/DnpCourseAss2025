@@ -15,8 +15,6 @@ public class ListUsersView
     {
         Console.WriteLine("USERS");
         foreach (var user in userRepository.GetMany())
-        {
             Console.WriteLine($"({user.Id}) {user.Name}");
-        }
     }
 }

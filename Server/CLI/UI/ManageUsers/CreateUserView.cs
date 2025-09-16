@@ -1,5 +1,5 @@
-﻿using RepositoryContracts;
-using Entities;
+﻿using Entities;
+using RepositoryContracts;
 
 namespace CLI.UI.ManageUsers;
 
@@ -30,17 +30,11 @@ public class CreateUserView
                     userInList.Name == username);
 
             if (userWithSameUsername != null)
-            {
                 Console.WriteLine("Username already taken");
-            }
             else if (string.IsNullOrWhiteSpace(username))
-            {
                 Console.WriteLine("Username cannot be empty");
-            }
             else
-            {
                 break; // valid username
-            }
         }
 
         string password;
@@ -51,17 +45,13 @@ public class CreateUserView
             password = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(password))
-            {
                 Console.WriteLine("Password cannot be empty");
-            }
             else
-            {
                 break; // valid password
-            }
         }
 
-        User user = new User(0, username, password);
-        User created = await userRepository.AddAsync(user);
+        var user = new User(0, username, password);
+        var created = await userRepository.AddAsync(user);
         Console.WriteLine(
             $"User ({created.Name}) with id {created.Id} successfully created");
     }

@@ -1,5 +1,4 @@
-﻿using Entities;
-using RepositoryContracts;
+﻿using RepositoryContracts;
 
 namespace CLI.UI.ManageUsers;
 
@@ -15,8 +14,8 @@ public class DeleteUserView
     public async Task DeleteUserAsync()
     {
         Console.Write("Enter user id for user to delete: ");
-        string? input = Console.ReadLine();
-        if (!int.TryParse(input, out int userId))
+        var input = Console.ReadLine();
+        if (!int.TryParse(input, out var userId))
         {
             Console.WriteLine("Invalid user id.");
             return;
