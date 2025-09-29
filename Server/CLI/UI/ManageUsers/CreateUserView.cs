@@ -23,7 +23,7 @@ public class CreateUserView
             username = Console.ReadLine();
 
             // Check for username already taken
-            var usersAlreadyInList = userRepository.GetMany();
+            var usersAlreadyInList = userRepository.GetMany();Console.WriteLine("\n\n-->Got Name\n");
 
             var userWithSameUsername =
                 usersAlreadyInList.FirstOrDefault(userInList =>

@@ -19,7 +19,7 @@ public class UserFileRepository : IUserRepository
     }
     
     public async Task<User> AddAsync(User user)
-    {
+    {Console.WriteLine("\n-->Trying To AddAsync()\n");
         // Read Content Of File Repo DeSerialize
         string usersAsJson = await File.ReadAllTextAsync(filePath);
         List<User> users =
@@ -33,7 +33,7 @@ public class UserFileRepository : IUserRepository
         
         // Serialize And Read Back To File Repo
         usersAsJson = JsonSerializer.Serialize(users);
-        await File.WriteAllTextAsync(filePath, usersAsJson);
+        await File.WriteAllTextAsync(filePath, usersAsJson);Console.WriteLine("\n\n-->Added Via AddAsync()\n");
         
         return user;
     }
@@ -102,13 +102,14 @@ public class UserFileRepository : IUserRepository
     public IQueryable<User> GetMany()
     {
         // Not able to await a Task. Instead, you can call Result on a task
-        string usersAsJson = File.ReadAllTextAsync(filePath).Result;
+        string usersAsJson = File.ReadAllText(filePath);Console.WriteLine($"\n\n-->Got Name {usersAsJson}\n");
         List<User> users =
-            JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
+            JsonSerializer.Deserialize<List<User>>(usersAsJson) ?? new List<User>();
         
         return users.AsQueryable();
     }
 
+    // Not Implemented Yet !
     public async Task<List<User>> ReadListFromFile()
     {
         string usersAsJson = await File.ReadAllTextAsync(filePath);
@@ -117,7 +118,7 @@ public class UserFileRepository : IUserRepository
         return users;
     }
 
-
+    // Not Implemented Yet !
     public async Task WriteListToFile(List<User> users)
     {
         string usersAsJson = JsonSerializer.Serialize(users);

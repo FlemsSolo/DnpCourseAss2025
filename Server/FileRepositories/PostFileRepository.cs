@@ -19,7 +19,7 @@ public class PostFileRepository : IPostRepository
     }
     
     public async Task<Post> AddAsync(Post post)
-    {
+    {Console.WriteLine("\n-->Trying To AddAsync()\n");
         // Read Content Of File Repo DeSerialize
         string postsAsJson = await File.ReadAllTextAsync(filePath);
         List<Post> posts =
@@ -33,7 +33,7 @@ public class PostFileRepository : IPostRepository
         
         // Serialize And Read Back To File Repo
         postsAsJson = JsonSerializer.Serialize(posts);
-        await File.WriteAllTextAsync(filePath, postsAsJson);
+        await File.WriteAllTextAsync(filePath, postsAsJson);Console.WriteLine("\n\n-->Added Via2 AddAsync()\n");
         
         return post;
     }
@@ -102,13 +102,14 @@ public class PostFileRepository : IPostRepository
     public IQueryable<Post> GetMany()
     {
         // Not able to await a Task. Instead, you can call Result on a task
-        string postsAsJson = File.ReadAllTextAsync(filePath).Result;
+        string postsAsJson = File.ReadAllText(filePath);
         List<Post> posts =
             JsonSerializer.Deserialize<List<Post>>(postsAsJson)!;
         
         return posts.AsQueryable();
     }
 
+    // Not Implemented Yet !
     public async Task<List<Post>> ReadListFromFile()
     {
         string postsAsJson = await File.ReadAllTextAsync(filePath);
@@ -117,7 +118,7 @@ public class PostFileRepository : IPostRepository
         return posts;
     }
 
-
+    // Not Implemented Yet !
     public async Task WriteListToFile(List<Post> posts)
     {
         string postsAsJson = JsonSerializer.Serialize(posts);

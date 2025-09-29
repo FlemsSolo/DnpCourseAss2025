@@ -102,13 +102,14 @@ public class CommentFileRepository : ICommentRepository
     public IQueryable<Comment> GetMany()
     {
         // Not able to await a Task. Instead, you can call Result on a task
-        string commentsAsJson = File.ReadAllTextAsync(filePath).Result;
+        string commentsAsJson = File.ReadAllText(filePath);
         List<Comment> comments =
             JsonSerializer.Deserialize<List<Comment>>(commentsAsJson)!;
         
         return comments.AsQueryable();
     }
 
+    // Not Implemented Yet !
     public async Task<List<Comment>> ReadListFromFile()
     {
         string commentsAsJson = await File.ReadAllTextAsync(filePath);
@@ -117,7 +118,7 @@ public class CommentFileRepository : ICommentRepository
         return comments;
     }
 
-
+    // Not Implemented Yet !
     public async Task WriteListToFile(List<Comment> comments)
     {
         string commentsAsJson = JsonSerializer.Serialize(comments);
