@@ -22,6 +22,7 @@ public class UserFileRepository : IUserRepository
     {Console.WriteLine("\n-->Trying To AddAsync()\n");
         // Read Content Of File Repo DeSerialize
         string usersAsJson = await File.ReadAllTextAsync(filePath);
+        
         List<User> users =
             JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
         
@@ -33,7 +34,7 @@ public class UserFileRepository : IUserRepository
         
         // Serialize And Read Back To File Repo
         usersAsJson = JsonSerializer.Serialize(users);
-        await File.WriteAllTextAsync(filePath, usersAsJson);Console.WriteLine("\n\n-->Added Via AddAsync()\n");
+        await File.WriteAllTextAsync(filePath, usersAsJson); Console.WriteLine("\n\n-->Added Via AddAsync()\n");
         
         return user;
     }

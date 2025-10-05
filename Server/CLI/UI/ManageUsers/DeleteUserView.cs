@@ -13,15 +13,26 @@ public class DeleteUserView
 
     public async Task DeleteUserAsync()
     {
-        Console.Write("Enter user id for user to delete: ");
-        var input = Console.ReadLine();
-        if (!int.TryParse(input, out var userId))
+        while (true)
         {
-            Console.WriteLine("Invalid user id.");
-            return;
-        }
+            Console.Write("Enter user id for user to delete: ");
+            string? input = Console.ReadLine();
+            if (!int.TryParse(input, out var userId))
+            {
+                Console.WriteLine("Invalid user id.");
+                continue; // Try With Another UserId
+            }
 
-        await userRepository.DeleteAsync(userId);
-        Console.WriteLine("user deleted successfully");
+            try
+            {
+            await userRepository.DeleteAsync(userId);
+            Console.WriteLine("user deleted successfully");
+            break;
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 }

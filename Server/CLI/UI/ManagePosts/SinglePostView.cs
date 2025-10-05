@@ -6,9 +6,9 @@ namespace CLI.UI.ManagePosts;
 // You can view a single post and afterward add/edit/delete a comment on the post
 public class SinglePostView
 {
-    private readonly ICommentRepository commentRepository;
     private readonly IPostRepository postRepository;
     private readonly IUserRepository userRepository;
+    private readonly ICommentRepository commentRepository;
 
     public SinglePostView(IPostRepository postRepository,
         IUserRepository userRepository, ICommentRepository commentRepository)
@@ -25,6 +25,7 @@ public class SinglePostView
 
         var input = Console.ReadLine();
 
+        // Is It Numeric ?
         if (!int.TryParse(input, out var id))
         {
             Console.WriteLine("Invalid post id.");
@@ -40,7 +41,7 @@ public class SinglePostView
 
         Console.WriteLine($"Title: {post.Title}\nBody: {post.Body}");
 
-        ShowCommentsAsync(id);
+        await ShowCommentsAsync(id);
 
         while (true)
         {
@@ -54,13 +55,16 @@ public class SinglePostView
             switch (Console.ReadLine())
             {
                 case "1":
-                    AddCommentAsync(id);
+                    await AddCommentAsync(id);
+                    await ShowCommentsAsync(id);
                     break;
                 case "2":
-                    EditCommentAsync(id);
+                    await EditCommentAsync(id);
+                    await ShowCommentsAsync(id);
                     break;
                 case "3":
-                    DeleteCommentAsync(id);
+                    await DeleteCommentAsync(id);
+                    await ShowCommentsAsync(id);
                     break;
                 case "0": return;
                 default:
@@ -87,13 +91,16 @@ public class SinglePostView
     {
         Console.Write("Enter user id: ");
         var input = Console.ReadLine();
+        
         if (!int.TryParse(input, out var userId))
         {
             Console.WriteLine("Invalid user id.");
             return;
         }
 
-        var userIdInList = userRepository.GetSingleAsync(userId);
+        // Maybe Put In Try Catch Block To Catch InvalidOperationException On GetSingleAsync
+        var userIdInList = await userRepository.GetSingleAsync(userId);
+        
         if (userIdInList == null)
         {
             Console.WriteLine("User id does not exist");
@@ -112,6 +119,7 @@ public class SinglePostView
     {
         Console.Write("Enter comment id to edit: ");
         var input = Console.ReadLine();
+        
         if (!int.TryParse(input, out var commentId))
         {
             Console.WriteLine("Invalid comment id.");
@@ -140,6 +148,7 @@ public class SinglePostView
     {
         Console.Write("Enter comment id to delete: ");
         var input = Console.ReadLine();
+        
         if (!int.TryParse(input, out var commentId))
         {
             Console.WriteLine("Invalid comment id.");
@@ -147,9 +156,7 @@ public class SinglePostView
         }
 
         var comment = await commentRepository.GetSingleAsync(commentId);
-        if (comment == null ||
-            comment.PostId !=
-            postId) // If the comment isn't posted on this post
+        if (comment == null || comment.PostId != postId) // If the comment isn't posted on this post
         {
             Console.WriteLine("Comment not found");
             return;

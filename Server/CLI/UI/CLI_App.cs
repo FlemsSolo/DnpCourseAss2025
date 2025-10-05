@@ -34,12 +34,12 @@ public class CLI_App
             {
                 case "1":
                     var userView = new ManageUsersView(userRepository);
-                    userView.DisplayMenu();
+                    await userView.DisplayMenu();
                     break;
                 case "2":
                     var postView = new ManagePostsView(postRepository,
                         userRepository, commentRepository);
-                    postView.DisplayMenu();
+                    await postView.DisplayMenu();
                     break;
                 /*case "3":
                     var commentView = new ManageCommentView(commentRepository,

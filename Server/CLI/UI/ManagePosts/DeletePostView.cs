@@ -14,12 +14,14 @@ public class DeletePostView
     public async Task DeletePostAsync()
     {
         Console.Write("Enter post id for post to delete: ");
-        var input = Console.ReadLine();
+        string? input = Console.ReadLine();
         if (!int.TryParse(input, out var postId))
         {
             Console.WriteLine("Invalid post id.");
             return;
         }
+        
+        // Delete Comments Attached To Post HERE !
 
         await postRepository.DeleteAsync(postId);
         Console.WriteLine("post deleted successfully");

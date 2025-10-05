@@ -1,4 +1,5 @@
-﻿using RepositoryContracts;
+﻿using Entities;
+using RepositoryContracts;
 
 namespace CLI.UI.ManagePosts;
 
@@ -16,21 +17,22 @@ public class UpdatePostView
         Console.WriteLine("UPDATE POST");
         Console.Write("Enter post id to edit: ");
         var input = Console.ReadLine();
+        
         if (!int.TryParse(input, out var postId))
         {
             Console.WriteLine("Invalid post id.");
             return;
         }
 
-        var post = await postRepository.GetSingleAsync(postId);
+        Post?  post = await postRepository.GetSingleAsync(postId);
 
         Console.Write("New title: ");
-        var newTitle = Console.ReadLine();
+        string? newTitle = Console.ReadLine();
 
-        post.Body = newTitle;
+        post.Title = newTitle;
 
         Console.Write("New body: ");
-        var newBody = Console.ReadLine();
+        string? newBody = Console.ReadLine();
 
         post.Body = newBody;
 

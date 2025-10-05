@@ -6,10 +6,12 @@ namespace CLI.UI.ManagePosts;
 public class CreatePostView
 {
     private readonly IPostRepository postRepository;
+    private readonly IUserRepository userRepository;
 
-    public CreatePostView(IPostRepository postRepository)
+    public CreatePostView(IPostRepository postRepository, IUserRepository userRepository)
     {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     public async Task AddPostAsync()
@@ -17,10 +19,10 @@ public class CreatePostView
         Console.WriteLine("CREATE POST");
 
         Console.Write("Title: ");
-        var title = Console.ReadLine();
+        string? title = Console.ReadLine();
 
         Console.Write("Body: ");
-        var body = Console.ReadLine();
+        string? body = Console.ReadLine();
 
         int forumId;
         while (true)
@@ -28,8 +30,9 @@ public class CreatePostView
             Console.Write("Forum id: ");
             var forumIdInput = Console.ReadLine();
 
-            if (int.TryParse(forumIdInput,
-                    out forumId)) break; // valid forum id
+            // Is It Numeric ?
+            if (int.TryParse(forumIdInput, out forumId)) 
+                break; // valid forum id
 
             Console.WriteLine("Invalid forum id");
         }
@@ -40,17 +43,30 @@ public class CreatePostView
             Console.Write("User id: ");
             var userIdInput = Console.ReadLine();
 
-            if (int.TryParse(userIdInput, out userId)) break; // valid user id
+            // Is It Numeric ?
+            if (!int.TryParse(userIdInput, out userId))
+            {
+                Console.WriteLine("Invalid user id");
+                continue; // invalid user id
+            }
 
-            Console.WriteLine("Invalid user id");
+            try
+            {
+                await userRepository.GetSingleAsync(userId);
+                break;
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         if (string.IsNullOrWhiteSpace(title)) title = "Unknown title";
 
         if (string.IsNullOrWhiteSpace(body)) body = "Unknown body";
 
-        var post = new Post(0, title, body, forumId,
-            userId);
+        var post = new Post(0, title, body, forumId, userId);
+        
         var created = await postRepository.AddAsync(post);
         Console.WriteLine($"Post with id {created.Id} successfully created");
     }
