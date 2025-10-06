@@ -13,8 +13,11 @@ public class ListUsersView
 
     public async Task GetManyUsers()
     {
-        Console.WriteLine("USERS");
+        Console.WriteLine("\nUSERS ----------------------");
+        
         foreach (var user in userRepository.GetMany())
             Console.WriteLine($"({user.Id}) {user.Name}");
+        
+        Console.WriteLine("------------------");
     }
 }

@@ -67,6 +67,7 @@ public class CreatePostView
 
         var post = new Post(0, title, body, forumId, userId);
         
+        // AddAsync Takes Care Of The post.id == 0 And Gives It A Proper ID
         var created = await postRepository.AddAsync(post);
         Console.WriteLine($"Post with id {created.Id} successfully created");
     }

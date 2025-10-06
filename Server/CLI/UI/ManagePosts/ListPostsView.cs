@@ -13,9 +13,11 @@ public class ListPostsView
 
     public async Task GetManyPosts()
     {
-        Console.WriteLine("POSTS");
+        Console.WriteLine("\nPOSTS ------------");
 
         foreach (var post in postRepository.GetMany())
-            Console.WriteLine($"[{post.Title}, {post.Id}]");
+            Console.WriteLine($"[{post.Id}, {post.Title}, UserId {post.UserId}]");
+        
+        Console.WriteLine("------------------");
     }
 }

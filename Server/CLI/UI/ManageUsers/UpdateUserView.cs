@@ -46,7 +46,7 @@ public class UpdateUserView
         Console.Write("New password: ");
         string? newPassword = Console.ReadLine();
 
-        user.PW = newPassword;
+        user.Pw = newPassword;
 
         await userRepository.UpdateAsync(user);
         Console.WriteLine($"User {user.Id} updated successfully");

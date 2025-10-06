@@ -11,24 +11,24 @@ public class CLI_App
     private readonly IPostRepository postRepository;
     private readonly ICommentRepository commentRepository;
 
-    public CLI_App(IUserRepository userRepository,
-        ICommentRepository commentRepository, IPostRepository postRepository)
+    public CLI_App(IUserRepository userRepository, IPostRepository postRepository,
+        ICommentRepository commentRepository)
     {
         this.userRepository = userRepository;
-        this.commentRepository = commentRepository;
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
     }
 
     public async Task StartAsync()
     {
         while (true)
         {
-            Console.WriteLine("MAIN MENU");
+            Console.WriteLine("MAIN MENU --------------");
             Console.WriteLine("1. Manage Users");
             Console.WriteLine("2. Manage Posts");
             //Console.WriteLine("3. Manage Comments");
             Console.WriteLine("0. Exit");
-            Console.Write("Choice: ");
+            Console.Write("Enter Choice: ");
 
             switch (Console.ReadLine())
             {
@@ -37,8 +37,8 @@ public class CLI_App
                     await userView.DisplayMenu();
                     break;
                 case "2":
-                    var postView = new ManagePostsView(postRepository,
-                        userRepository, commentRepository);
+                    var postView = new ManagePostsView(userRepository, postRepository,
+                        commentRepository);
                     await postView.DisplayMenu();
                     break;
                 /*case "3":

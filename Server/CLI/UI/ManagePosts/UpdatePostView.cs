@@ -24,8 +24,8 @@ public class UpdatePostView
             return;
         }
 
-        Post?  post = await postRepository.GetSingleAsync(postId);
-
+        Post? post = await postRepository.GetSingleAsync(postId);
+    
         Console.Write("New title: ");
         string? newTitle = Console.ReadLine();
 

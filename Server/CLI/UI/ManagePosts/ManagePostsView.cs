@@ -4,15 +4,15 @@ namespace CLI.UI.ManagePosts;
 
 public class ManagePostsView
 {
-    private readonly IPostRepository postRepository;
     private readonly IUserRepository userRepository;
+    private readonly IPostRepository postRepository;
     private readonly ICommentRepository commentRepository;
 
-    public ManagePostsView(IPostRepository postRepository,
-        IUserRepository userRepository, ICommentRepository commentRepository)
+    public ManagePostsView(IUserRepository userRepository, IPostRepository postRepository,
+        ICommentRepository commentRepository)
     {
-        this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
         this.commentRepository = commentRepository;
     }
 
@@ -20,14 +20,14 @@ public class ManagePostsView
     {
         while (true)
         {
-            Console.WriteLine("\nMANAGE POSTS MENU");
+            Console.WriteLine("\nMANAGE POSTS MENU --------------------");
             Console.WriteLine("1. Create Posts");
             Console.WriteLine("2. Update Post");
             Console.WriteLine("3. Delete Post");
             Console.WriteLine("4. View Posts Overview");
             Console.WriteLine("5. View Single Post");
             Console.WriteLine("0. Back");
-            Console.Write("Choice: ");
+            Console.Write("Enter Choice: ");
 
             switch (Console.ReadLine())
             {

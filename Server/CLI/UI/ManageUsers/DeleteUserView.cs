@@ -25,13 +25,14 @@ public class DeleteUserView
 
             try
             {
-            await userRepository.DeleteAsync(userId);
-            Console.WriteLine("user deleted successfully");
-            break;
+                await userRepository.DeleteAsync(userId);
+                Console.WriteLine("user deleted successfully");
+                break;
             }
             catch (InvalidOperationException e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($"---> Cannot Delete UserId {userId} : \n {e.Message}");
+                break ;
             }
         }
     }

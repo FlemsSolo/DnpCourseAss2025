@@ -15,13 +15,13 @@ public class ManageUsersView
     {
         while (true)
         {
-            Console.WriteLine("\nMANAGE USERS MENU");
+            Console.WriteLine("\nMANAGE USERS MENU ---------------");
             Console.WriteLine("1. Create User");
             Console.WriteLine("2. Update User");
             Console.WriteLine("3. Delete User");
             Console.WriteLine("4. View Users Overview");
             Console.WriteLine("0. Back");
-            Console.Write("Choice: ");
+            Console.Write("Enter Choice: ");
 
             switch (Console.ReadLine())
             {

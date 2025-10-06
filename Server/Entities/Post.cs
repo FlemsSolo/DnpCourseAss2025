@@ -11,12 +11,12 @@ public class Post
     public int UserId { get; set; }
 
     // Constructor
-    public Post(int Id, string Title, string Body, int SubForumId, int UserId)
+    public Post(int id, string title, string body, int subForumId, int userId)
     {
-        this.Id = Id;
-        this.Title = Title;
-        this.Body = Body;
-        this.SubForumId = SubForumId;
-        this.UserId = UserId;
+        Id = id;
+        Title = title;
+        Body = body;
+        SubForumId = subForumId;
+        UserId = userId;
     }
 }

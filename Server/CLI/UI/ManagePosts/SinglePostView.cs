@@ -20,7 +20,7 @@ public class SinglePostView
 
     public async Task GetSinglePostAsync()
     {
-        Console.WriteLine("SINGLE POST MENU");
+        Console.WriteLine("\nSINGLE POST MENU -----------");
         Console.Write("Enter post id:");
 
         var input = Console.ReadLine();
@@ -42,6 +42,8 @@ public class SinglePostView
         Console.WriteLine($"Title: {post.Title}\nBody: {post.Body}");
 
         await ShowCommentsAsync(id);
+        
+        Console.WriteLine("------------------\n");
 
         while (true)
         {
@@ -49,8 +51,8 @@ public class SinglePostView
             Console.WriteLine("1. Add comment");
             Console.WriteLine("2. Edit comment");
             Console.WriteLine("3. Delete comment");
-            Console.WriteLine("0. Back");
-            Console.Write("Choice: ");
+            Console.WriteLine("0. Back To Post Menu");
+            Console.Write("Enter Choice: ");
 
             switch (Console.ReadLine())
             {

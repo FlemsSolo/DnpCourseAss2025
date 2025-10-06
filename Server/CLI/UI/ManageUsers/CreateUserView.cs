@@ -23,7 +23,7 @@ public class CreateUserView
             username = Console.ReadLine();
 
             // Check for username already taken
-            var usersAlreadyInList = userRepository.GetMany();Console.WriteLine("\n\n-->Got Name\n");
+            var usersAlreadyInList = userRepository.GetMany();
 
             var userWithSameUsername =
                 usersAlreadyInList.FirstOrDefault(userInList =>
@@ -50,7 +50,10 @@ public class CreateUserView
                 break; // valid password
         }
 
-        var user = new User(0, username, password);
+        //var user = new User(0, username, password);
+        var user = new User{Name = username, Pw = password};
+        
+        // AddAsync Takes Care Of The post.id == 0 And Gives It A Proper ID
         var created = await userRepository.AddAsync(user);
         Console.WriteLine(
             $"User ({created.Name}) with id {created.Id} successfully created");

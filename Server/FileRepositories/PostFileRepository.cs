@@ -102,9 +102,10 @@ public class PostFileRepository : IPostRepository
     public IQueryable<Post> GetMany()
     {
         // Not able to await a Task. Instead, you can call Result on a task
-        string postsAsJson = File.ReadAllText(filePath);
-        List<Post> posts =
-            JsonSerializer.Deserialize<List<Post>>(postsAsJson)!;
+       
+        string postsAsJson = File.ReadAllText(filePath); Console.WriteLine($"\n-->42 Got Posts Json {postsAsJson}\n");
+        
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postsAsJson)!;
         
         return posts.AsQueryable();
     }
