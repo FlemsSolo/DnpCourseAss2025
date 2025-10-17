@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileRepositories", "Server\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{527E91CB-1044-417D-B7DF-F0527409909D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiContracts", "Shared\ApiContracts\ApiContracts.csproj", "{6CDF866C-09BC-4E6C-A1EA-83A2A7D75EF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiContracts_DTO", "Shared\ApiContracts_DTO\ApiContracts_DTO.csproj", "{6CDF866C-09BC-4E6C-A1EA-83A2A7D75EF0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "Server\WebApi\WebApi.csproj", "{9095F5D2-682E-437E-AF92-B6D07F544FB1}"
 EndProject

@@ -87,7 +87,7 @@ public class UserFileRepository : IUserRepository
 
     public async Task<User> GetSingleAsync(int id)
     {
-        string usersAsJson = await File.ReadAllTextAsync(filePath);
+        string usersAsJson = await File.ReadAllTextAsync(filePath); Console.WriteLine($"--> usersAsJson : {usersAsJson}");
         List<User> users =
             JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
         
