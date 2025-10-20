@@ -162,12 +162,15 @@ public class CommentsController : ControllerBase
         var filteredComments = cachedComments;
 
         // Filters
+        
+        // Filter userid -----------------------------
         if (userid.HasValue)
         {
             filteredComments =
                 filteredComments.Where(c => c.UserId == userid.Value);
         }
 
+        // Filter postid --------------------------------
         if (postid.HasValue)
         {
             filteredComments =
@@ -185,6 +188,7 @@ public class CommentsController : ControllerBase
                 { Id = u.Id, Username = u.Name })
             .ToList();
 
+        // Filter authorName -------------------------------------
         if (!string.IsNullOrWhiteSpace(authorName))
         {
             var author = users.FirstOrDefault(u => u.Username == authorName);
@@ -199,6 +203,7 @@ public class CommentsController : ControllerBase
             }
         }
 
+        // Filter sortBy ----------------------------------------
         if (!string.IsNullOrWhiteSpace(sortBy))
         {
             switch (sortBy.ToLowerInvariant())

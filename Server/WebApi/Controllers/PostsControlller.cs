@@ -197,6 +197,8 @@ public class PostsController : ControllerBase
 // --------------------------------------------------------------------------
 
     // -- Get Many Posts
+    // -- GET Many Posts : endpoint to retrieve all posts : http://localhost:5274/posts?title=B&userid=username&userid=authorname
+
     [HttpGet]
     public async Task<ActionResult<PostDTO>> GetPosts(
         [FromQuery] string? title,
@@ -222,15 +224,19 @@ public class PostsController : ControllerBase
         var filteredPosts = cachedPosts;
 
         // Filters
+        
+        // Filter title -------------------------
         if (!string.IsNullOrWhiteSpace(title))
         {
-            filteredPosts = filteredPosts.Where(p =>
-                p.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+            filteredPosts = filteredPosts
+                .Where(p => p.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
         }
 
+        // Filter userid -----------------------
         if (userid.HasValue)
         {
-            filteredPosts = filteredPosts.Where(p => p.UserId == userid.Value);
+            filteredPosts = filteredPosts
+                .Where(p => p.UserId == userid.Value);
         }
 
         var userIds =
@@ -238,6 +244,7 @@ public class PostsController : ControllerBase
                 .Select(p => p.UserId)
                 .Distinct()
                 .ToList(); // no duplicates
+        
         // Map to UserDTO
         var users = userRepository
             .GetMany()
@@ -246,6 +253,7 @@ public class PostsController : ControllerBase
                 { Id = u.Id, Username = u.Name })
             .ToList();
 
+        // Filter autherName ------------------------
         if (!string.IsNullOrWhiteSpace(authorName))
         {
             var author = users.FirstOrDefault(u => u.Username == authorName);

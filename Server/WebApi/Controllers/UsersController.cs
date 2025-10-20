@@ -195,6 +195,8 @@ public class UsersController : ControllerBase
 
 
         // Filter
+        
+        // Filter StartsWith ----------------------------
         if (!string.IsNullOrWhiteSpace(startsWith))
         {
             filteredUsers = filteredUsers.Where(u =>
@@ -202,6 +204,7 @@ public class UsersController : ControllerBase
                     StringComparison.OrdinalIgnoreCase));
         }
 
+        // Filter sortBy -------------------------------
         if (!string.IsNullOrWhiteSpace(sortBy))
         {
             switch (sortBy)
