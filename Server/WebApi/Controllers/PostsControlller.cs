@@ -137,14 +137,16 @@ public class PostsController : ControllerBase
         if (include != null &&
             include.Contains("comments", StringComparison.OrdinalIgnoreCase))
         {
-            var comments = commentRepository.GetMany()
+            var comments = commentRepository
+                .GetMany()
                 .Where(c => c.PostId == id)
                 .ToList();
             var userIds = comments.Select(c => c.UserId).Distinct().ToList();
             var users = userRepository.GetMany()
                 .Where(u => userIds.Contains(u.Id))
                 .Select(u => new UserDTO()
-                    { Id = u.Id, Username = u.Name }).ToList();
+                    { Id = u.Id, Username = u.Name })
+                .ToList();
 
             dtoToCache = new PostWithCommentsDTO()
             {
@@ -159,7 +161,8 @@ public class PostsController : ControllerBase
                     Id = c.Id, Body = c.Body, PostId = c.PostId,
                     UserId = c.UserId,
                     Author = users.FirstOrDefault(u => u.Id == c.UserId)
-                }).ToList()
+                })
+                .ToList()
             };
         }
         else
@@ -205,7 +208,10 @@ public class PostsController : ControllerBase
         if (!cache.TryGetValue(allPostsCacheKey,
                 out IEnumerable<Post>? cachedPosts))
         {
-            cachedPosts = postRepository.GetMany().ToList();
+            cachedPosts = postRepository
+                .GetMany()
+                .ToList();
+            
             cache.Set(allPostsCacheKey, cachedPosts,
                 new MemoryCacheEntryOptions()
                 {
@@ -228,12 +234,17 @@ public class PostsController : ControllerBase
         }
 
         var userIds =
-            filteredPosts.Select(p => p.UserId).Distinct()
+            filteredPosts
+                .Select(p => p.UserId)
+                .Distinct()
                 .ToList(); // no duplicates
         // Map to UserDTO
-        var users = userRepository.GetMany().Where(u => userIds.Contains(u.Id))
+        var users = userRepository
+            .GetMany()
+            .Where(u => userIds.Contains(u.Id))
             .Select(u => new UserDTO()
-                { Id = u.Id, Username = u.Name }).ToList();
+                { Id = u.Id, Username = u.Name })
+            .ToList();
 
         if (!string.IsNullOrWhiteSpace(authorName))
         {
@@ -249,11 +260,13 @@ public class PostsController : ControllerBase
         }
 
         // Map to PostDTO using LINQ
-        var posts = filteredPosts.Select(p => new PostDTO
-        {
-            Id = p.Id, Title = p.Title, Body = p.Body, UserId = p.UserId,
-            Author = users.FirstOrDefault(u => u.Id == p.UserId)
-        }).ToList();
+        var posts = filteredPosts
+            .Select(p => new PostDTO
+                {
+                Id = p.Id, Title = p.Title, Body = p.Body, UserId = p.UserId,
+                Author = users.FirstOrDefault(u => u.Id == p.UserId)
+                })
+            .ToList();
 
         return Ok(posts);
     }

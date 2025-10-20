@@ -148,7 +148,10 @@ public class CommentsController : ControllerBase
         if (!_cache.TryGetValue(allCommentsCacheKey,
                 out IEnumerable<Comment>? cachedComments))
         {
-            cachedComments = _commentRepository.GetMany().ToList();
+            cachedComments = _commentRepository
+                .GetMany()
+                .ToList();
+            
             _cache.Set(allCommentsCacheKey, cachedComments,
                 new MemoryCacheEntryOptions()
                 {
@@ -174,9 +177,13 @@ public class CommentsController : ControllerBase
         var userIds =
             filteredComments.Select(c => c.UserId).Distinct(); // no duplicates
         // Map to UserDTO
-        var users = _userRepository.GetMany().Where(u => userIds.Contains(u.Id))
-            .Select(u => new UserDTO()
-                { Id = u.Id, Username = u.Name }).ToList();
+        var users = _userRepository
+            .GetMany()
+            .Where(u => userIds
+                .Contains(u.Id))
+                .Select(u => new UserDTO()
+                { Id = u.Id, Username = u.Name })
+            .ToList();
 
         if (!string.IsNullOrWhiteSpace(authorName))
         {
@@ -206,11 +213,13 @@ public class CommentsController : ControllerBase
         }
 
         // Map to CommentDTO using LINQ
-        var comments = filteredComments.Select(c => new CommentDTO()
-        {
-            Id = c.Id, Body = c.Body, PostId = c.PostId, UserId = c.UserId,
-            Author = users.FirstOrDefault(u => u.Id == c.UserId)
-        }).ToList();
+        var comments = filteredComments
+            .Select(c => new CommentDTO()
+            {
+                Id = c.Id, Body = c.Body, PostId = c.PostId, UserId = c.UserId,
+                Author = users.FirstOrDefault(u => u.Id == c.UserId)
+            })
+            .ToList();
 
         return Ok(comments);
     }

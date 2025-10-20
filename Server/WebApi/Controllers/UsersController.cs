@@ -97,11 +97,7 @@ public class UsersController : ControllerBase
 
         CacheInvalidate(id);
 
-        var dto = new UserDTO()
-        {
-            Id = user.Id,
-            Username = user.Name
-        };
+        var dto = new UserDTO() { Id = user.Id, Username = user.Name };
 
         return Ok(dto);
     }
@@ -153,10 +149,7 @@ public class UsersController : ControllerBase
 
         var user = await userRepository.GetSingleAsync(id);
 
-        var userDto = new UserDTO()
-        {
-            Id = user.Id, Username = user.Name
-        };
+        var userDto = new UserDTO() { Id = user.Id, Username = user.Name };
 
         /*cache.Set(cacheKey, userDto, new MemoryCacheEntryOptions()
         {
@@ -224,10 +217,12 @@ public class UsersController : ControllerBase
 
         // The DTO does Not Need To Contain All The Fields Of The Class User
         // It Would Not Be Nice If You Could Display The Passwords Of All Users
-        var filtUsers = filteredUsers.Select(u => new UserDTO
-        {
-            Id = u.Id, Username = u.Name
-        }).ToList();
+        var filtUsers = filteredUsers
+            .Select(u => new UserDTO
+                {
+                Id = u.Id, Username = u.Name
+                })
+            .ToList();
 
         return Ok(filtUsers);
     } 
