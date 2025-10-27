@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
+
 using ApiContracts_DTO;
+using ApiContracts_DTO.Users;
 
 namespace BlazorApp.HttpServices;
 
@@ -8,6 +10,7 @@ public class HttpUserService : IUserService
     private readonly HttpClient client;
 
     // HttpClient is automatically injected through the constructor
+    // Dependency Injection
     public HttpUserService(HttpClient client)
     {
         this.client = client;

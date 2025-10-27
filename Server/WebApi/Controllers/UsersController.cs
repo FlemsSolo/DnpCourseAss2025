@@ -1,4 +1,5 @@
 ﻿using ApiContracts_DTO;
+using ApiContracts_DTO.Users;
 using Entities;
 using RepositoryContracts;
 

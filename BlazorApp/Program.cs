@@ -3,12 +3,14 @@ using BlazorApp.Components;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
+builder.Services
+    .AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped(sp => new HttpClient 
 {
     // Web API https value from launchSettings.json
+    // Notice : https protocol
     BaseAddress = new Uri("https://localhost:7047")
 });
 
