@@ -5,34 +5,34 @@
 <PageTitle>Posts</PageTitle>
 
 <h3>Posts</h3>
-<a href="/posts/new" class="btn btn-dark mb-3"> Create New Post</a>
+<a href="/posts/new" class="btn btn-dark mb-3"> Lav nyt opslag</a>
 
 
 @if (posts == null)
 {
     <p>
-        <em>Loading...</em>
+        <em>Henter...</em>
     </p>
 }
 else
 {
     <div class="mb-2 w-25">
-        <SearchBox Type="text" Label="Filter by Title" Placeholder="Enter title"
+        <SearchBox Type="text" Label="Filtrer på Titel" Placeholder="Indsæt titel"
                    OnSearchChanged="FilterByTitle"/>
     </div>
     <div class="mb-2 w-25">
-        <SearchBox Type="text" Label="Filter by Author" Placeholder="Enter author"
+        <SearchBox Type="text" Label="Filtrer på Forfatter" Placeholder="Indsæt forfatter"
                    OnSearchChanged="FilterByAuthor"/>
     </div>
     <div class="mb-2 w-25">
-        <SearchBox Type="number" Label="Filter by User id" Placeholder="Enter user id"
+        <SearchBox Type="number" Label="Filtrer på Bruger id" Placeholder="Indsæt bruger id"
                    OnSearchChanged="FilterByUserId"/>
     </div>
     <table class="table">
         <thead>
         <tr>
-            <th>Title</th>
-            <th>Author</th>
+            <th>Titel</th>
+            <th>Forfatter</th>
         </tr>
         </thead>
         <tbody>
