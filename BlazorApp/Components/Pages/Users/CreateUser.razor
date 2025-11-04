@@ -1,0 +1,60 @@
+﻿@page "/users/new"
+@using ApiContracts_DTO.Users
+@using BlazorApp.HttpServices
+@inject IUserService UserService
+<h3>Create User</h3>
+
+@if (!string.IsNullOrEmpty(LastSubmitResult))
+{
+    <h2 class="alert @(IsSucces ? "alert-success" : "alert-danger")">
+        @LastSubmitResult
+    </h2>
+}
+<UserForm User="User"
+          OnValidSubmit="ValidFormSubmitted"
+          OnInvalidSubmit="InvalidFormSubmitted"/>
+
+@code {
+
+    CreateUserDTO User = new CreateUserDTO
+    {
+        Username = null,
+        Password = null
+    };
+
+    string LastSubmitResult;
+    bool IsSucces;
+    UserDTO? CreatedUser;
+
+    async Task ValidFormSubmitted()
+    {
+        LastSubmitResult = "Submitting user...";
+        IsSucces = false;
+        try
+        {
+            CreatedUser = await UserService.AddUserAsync(User);
+
+            LastSubmitResult = $"Success! User created with ID: {CreatedUser.Id}.";
+            IsSucces = true;
+
+            User = new CreateUserDTO // reset
+
+            {
+                Username = null,
+                Password = null
+            };
+        }
+        catch (Exception e)
+        {
+            LastSubmitResult = $"Server Error: {e.Message}";
+            IsSucces = false;
+        }
+    }
+
+    void InvalidFormSubmitted()
+    {
+        LastSubmitResult = "Failure! Please correct the highlighted errors.";
+        IsSucces = false;
+    }
+
+}

@@ -48,7 +48,7 @@ public class CommentFileRepository : ICommentRepository
         Comment? existingComment = comments.SingleOrDefault(p => p.Id == comment.Id);
         if (existingComment is null)
         {
-            throw new InvalidOperationException($"Comment with ID '{comment.Id}' not found");
+            throw new InvalidOperationException($"Kommentar med ID '{comment.Id}' ikke fundet");
         }
 
         comments.Remove(existingComment);
@@ -71,7 +71,7 @@ public class CommentFileRepository : ICommentRepository
         if (commentToRemove is null)
         {
             throw new InvalidOperationException(
-                $"Comment with ID '{id}' not found");
+                $"Kommentar med ID '{id}' ikke fundet");
         }
 
         comments.Remove(commentToRemove);
@@ -93,7 +93,7 @@ public class CommentFileRepository : ICommentRepository
         if (comment is null)
         {
             throw new InvalidOperationException(
-                $"Comment with ID '{id}' not found");
+                $"Kommentar med ID '{id}' ikke fundet");
         }
 
         return comment;
@@ -109,7 +109,7 @@ public class CommentFileRepository : ICommentRepository
         return comments.AsQueryable();
     }
 
-    // Not Implemented Yet !
+    // Not Implemented Yet ! ------------------------------------------------
     public async Task<List<Comment>> ReadListFromFile()
     {
         string commentsAsJson = await File.ReadAllTextAsync(filePath);
@@ -118,7 +118,7 @@ public class CommentFileRepository : ICommentRepository
         return comments;
     }
 
-    // Not Implemented Yet !
+    // Not Implemented Yet ! ------------------------------------------------
     public async Task WriteListToFile(List<Comment> comments)
     {
         string commentsAsJson = JsonSerializer.Serialize(comments);

@@ -32,7 +32,7 @@ public class PostInMemoryRepository : IPostRepository
         if (existingPost is null)
         {
             throw new InvalidOperationException(
-                $"Post with ID '{post.Id}' not found");
+                $"Post med ID '{post.Id}' ikke fundet");
         }
 
         posts.Remove(existingPost);
@@ -47,7 +47,7 @@ public class PostInMemoryRepository : IPostRepository
         if (postToRemove is null)
         {
             throw new InvalidOperationException(
-                $"Post with ID '{id}' not found");
+                $"Post med ID '{id}' ikke fundet");
         }
 
         posts.Remove(postToRemove);
@@ -61,7 +61,7 @@ public class PostInMemoryRepository : IPostRepository
         if (post is null)
         {
             throw new InvalidOperationException(
-                $"Post with ID '{id}' not found");
+                $"Post med ID '{id}' ikke fundet");
         }
 
         return Task.FromResult(post);

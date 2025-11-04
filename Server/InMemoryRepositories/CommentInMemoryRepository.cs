@@ -22,7 +22,7 @@ public class CommentInMemoryRepository : ICommentRepository
         if (existingComment is null)
         {
             throw new InvalidOperationException(
-                $"Comment with ID '{comment.Id}' not found");
+                $"Kommentar med ID '{comment.Id}' ikke fundet");
         }
 
         comments.Remove(existingComment);
@@ -37,7 +37,7 @@ public class CommentInMemoryRepository : ICommentRepository
         if (commentToRemove is null)
         {
             throw new InvalidOperationException(
-                $"Comment with ID '{id}' not found");
+                $"Kommentar med ID '{id}' ikke fundet");
         }
 
         comments.Remove(commentToRemove);
@@ -51,7 +51,7 @@ public class CommentInMemoryRepository : ICommentRepository
         if (comment is null)
         {
             throw new InvalidOperationException(
-                $"Comment with ID '{id}' not found");
+                $"Kommentar med ID '{id}' ikke fundet");
         }
 
         return Task.FromResult(comment);

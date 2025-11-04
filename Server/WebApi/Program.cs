@@ -5,8 +5,10 @@ using RepositoryContracts;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddMemoryCache();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 // Add services to the container.
@@ -36,7 +38,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+//app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.Run();

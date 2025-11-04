@@ -10,4 +10,9 @@
       <ProjectReference Include="..\Shared\ApiContracts_DTO\ApiContracts_DTO.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <!--Folder Include="Components\Authentication\" /-->
+      <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.10" />
+    </ItemGroup>
+
 </Project>

@@ -1,0 +1,97 @@
+﻿@page "/Posts"
+@attribute [StreamRendering]
+@inject IPostService PostService
+
+<PageTitle>Posts</PageTitle>
+
+<h3>Posts</h3>
+<a href="/posts/new" class="btn btn-dark mb-3"> Create New Post</a>
+
+
+@if (posts == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div class="mb-2 w-25">
+        <SearchBox Type="text" Label="Filter by Title" Placeholder="Enter title"
+                   OnSearchChanged="FilterByTitle"/>
+    </div>
+    <div class="mb-2 w-25">
+        <SearchBox Type="text" Label="Filter by Author" Placeholder="Enter author"
+                   OnSearchChanged="FilterByAuthor"/>
+    </div>
+    <div class="mb-2 w-25">
+        <SearchBox Type="number" Label="Filter by User id" Placeholder="Enter user id"
+                   OnSearchChanged="FilterByUserId"/>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var post in filteredPosts)
+        {
+            <PostListItem Post="post"/>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private IEnumerable<PostDTO>? posts;
+    private IEnumerable<PostDTO>? filteredPosts = Enumerable.Empty<PostDTO>();
+
+
+    private string titleFilter = string.Empty;
+    private string authorFilter = string.Empty;
+    private string userIdFilter = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await PostService.GetPostsAsync(null, null, null);
+        filteredPosts = posts;
+    }
+
+    private async Task FilterByTitle(string title)
+    {
+        titleFilter = title;
+        await FilterPosts();
+    }
+    
+    private async Task FilterByAuthor(string author)
+    {
+        authorFilter = author;
+        await FilterPosts();
+    }
+    
+    private async Task FilterByUserId(string userid)
+    {
+        userIdFilter = userid;
+        await FilterPosts();
+    }
+
+    private async Task FilterPosts()
+    {
+        int? userIdQueryParameter = null;
+
+        if (!string.IsNullOrWhiteSpace(userIdFilter) && int.TryParse(userIdFilter, out var id))
+        {
+            userIdQueryParameter = id;
+        }
+
+        filteredPosts = await PostService.GetPostsAsync(
+            string.IsNullOrWhiteSpace(titleFilter) ? null : titleFilter,
+            userIdQueryParameter,
+            string.IsNullOrWhiteSpace(authorFilter) ? null : authorFilter
+        );
+    }
+
+}

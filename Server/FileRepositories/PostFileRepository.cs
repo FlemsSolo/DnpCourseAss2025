@@ -48,7 +48,7 @@ public class PostFileRepository : IPostRepository
         Post? existingPost = posts.SingleOrDefault(p => p.Id == post.Id);
         if (existingPost is null)
         {
-            throw new InvalidOperationException($"Post with ID '{post.Id}' not found");
+            throw new InvalidOperationException($"Post med ID '{post.Id}' ikke fundet");
         }
 
         posts.Remove(existingPost);
@@ -71,7 +71,7 @@ public class PostFileRepository : IPostRepository
         if (postToRemove is null)
         {
             throw new InvalidOperationException(
-                $"Post with ID '{id}' not found");
+                $"Post med ID '{id}' ikke fundet");
         }
 
         posts.Remove(postToRemove);
@@ -93,7 +93,7 @@ public class PostFileRepository : IPostRepository
         if (post is null)
         {
             throw new InvalidOperationException(
-                $"Post with ID '{id}' not found");
+                $"Post med ID '{id}' ikke fundet");
         }
 
         return post;
@@ -110,7 +110,7 @@ public class PostFileRepository : IPostRepository
         return posts.AsQueryable();
     }
 
-    // Not Implemented Yet !
+    // Not Implemented Yet ! ----------------------------------------------
     public async Task<List<Post>> ReadListFromFile()
     {
         string postsAsJson = await File.ReadAllTextAsync(filePath);
@@ -119,7 +119,7 @@ public class PostFileRepository : IPostRepository
         return posts;
     }
 
-    // Not Implemented Yet !
+    // Not Implemented Yet ! ---------------------------------------------
     public async Task WriteListToFile(List<Post> posts)
     {
         string postsAsJson = JsonSerializer.Serialize(posts);

@@ -50,7 +50,7 @@ public class UserFileRepository : IUserRepository
         User? existingUser = users.SingleOrDefault(p => p.Id == user.Id);
         if (existingUser is null)
         {
-            throw new InvalidOperationException($"User with ID '{user.Id}' not found");
+            throw new InvalidOperationException($"Bruger med ID '{user.Id}' ikke fundet");
         }
 
         users.Remove(existingUser);
@@ -74,7 +74,7 @@ public class UserFileRepository : IUserRepository
         if (userToRemove is null)
         {
             throw new InvalidOperationException(
-                $"User with ID '{id}' not found");
+                $"Bruger med ID '{id}' ikke fundet");
         }
 
         users.Remove(userToRemove);
@@ -96,7 +96,7 @@ public class UserFileRepository : IUserRepository
         if (user is null)
         {
             throw new InvalidOperationException(
-                $"User with ID '{id}' not found");
+                $"Bruger med ID '{id}' ikke fundet");
         }
 
         return user;
@@ -154,7 +154,22 @@ public class UserFileRepository : IUserRepository
         */
     }
 
-    // Not Implemented Yet !
+    public async Task<User> GetByUsernameAsync(string username)
+    {
+        string usersAsJson = await File.ReadAllTextAsync(filePath);
+        List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!;
+        
+        User? user = users.SingleOrDefault(p => p.Name.Equals(username));
+        if (user is null)
+        {
+            throw new InvalidOperationException(
+                $"Bruger med brugernavn '{username}' ikke fundet");
+        }
+        
+        return user;   
+    }
+
+    // Not Implemented Yet ! --------------------------------------------
     public async Task<List<User>> ReadListFromFile()
     {
         string usersAsJson = await File.ReadAllTextAsync(filePath);
@@ -162,7 +177,7 @@ public class UserFileRepository : IUserRepository
         return users;
     }
 
-    // Not Implemented Yet !
+    // Not Implemented Yet ! ----------------------------------------------
     public async Task WriteListToFile(List<User> users)
     {
         string usersAsJson = JsonSerializer.Serialize(users);

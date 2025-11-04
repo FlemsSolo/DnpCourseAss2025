@@ -32,7 +32,7 @@ public class UserInMemoryRepository : IUserRepository
         if (existingUser is null)
         {
             throw new InvalidOperationException(
-                $"User with ID '{user.Id}' not found");
+                $"Bruger med ID '{user.Id}' ikke fundet");
         }
 
         users.Remove(existingUser);
@@ -47,7 +47,7 @@ public class UserInMemoryRepository : IUserRepository
         if (userToRemove is null)
         {
             throw new InvalidOperationException(
-                $"User with ID '{id}' not found");
+                $"Bruger med ID '{id}' ikke fundet");
         }
 
         users.Remove(userToRemove);
@@ -61,7 +61,7 @@ public class UserInMemoryRepository : IUserRepository
         if (user is null)
         {
             throw new InvalidOperationException(
-                $"User with ID '{id}' not found");
+                $"Bruger med ID '{id}' ikke fundet");
         }
 
         return Task.FromResult(user);
@@ -70,6 +70,18 @@ public class UserInMemoryRepository : IUserRepository
     public IQueryable<User> GetMany()
     {
         return users.AsQueryable();
+    }
+
+    public async Task<User> GetByUsernameAsync(string username)
+    {
+        User? user = users.SingleOrDefault(p => p.Name.Equals(username));
+        if (user is null)
+        {
+            throw new InvalidOperationException(
+                $"User with username '{username}' not found");
+        }
+
+        return await Task.FromResult(user);
     }
 
 }
