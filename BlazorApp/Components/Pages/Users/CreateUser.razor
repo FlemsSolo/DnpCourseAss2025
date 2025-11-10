@@ -1,8 +1,11 @@
 ﻿@page "/users/new"
+
 @using ApiContracts_DTO.Users
 @using BlazorApp.HttpServices
+
 @inject IUserService UserService
-<h3>Create User</h3>
+
+<h3>Opret Bruger</h3>
 
 @if (!string.IsNullOrEmpty(LastSubmitResult))
 {
@@ -28,13 +31,13 @@
 
     async Task ValidFormSubmitted()
     {
-        LastSubmitResult = "Submitting user...";
+        LastSubmitResult = "Indsender Bruger...";
         IsSucces = false;
         try
         {
             CreatedUser = await UserService.AddUserAsync(User);
 
-            LastSubmitResult = $"Success! User created with ID: {CreatedUser.Id}.";
+            LastSubmitResult = $"Success! Bruger oprettet med ID: {CreatedUser.Id}.";
             IsSucces = true;
 
             User = new CreateUserDTO // reset
@@ -46,14 +49,14 @@
         }
         catch (Exception e)
         {
-            LastSubmitResult = $"Server Error: {e.Message}";
+            LastSubmitResult = $"Server Fejl: {e.Message}";
             IsSucces = false;
         }
     }
 
     void InvalidFormSubmitted()
     {
-        LastSubmitResult = "Failure! Please correct the highlighted errors.";
+        LastSubmitResult = "Fejl! Ret venligst de markerede fejl.";
         IsSucces = false;
     }
 

@@ -1,8 +1,9 @@
 ﻿using ApiContracts_DTO;
 using Entities;
-using Microsoft.AspNetCore.Mvc;
 using RepositoryContracts;
 using StudHub.SharedDTO;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
@@ -17,6 +18,8 @@ public class AuthController : ControllerBase
         _userRepository = userRepository;
     }
 
+    // -- Login --
+    
     [HttpPost("login")]
     public async Task<ActionResult<UserDTO>> Login(
         [FromBody] LoginRequestDTO request)

@@ -4,10 +4,26 @@
     flex-direction: column;
 }
 
+/* FLEMS Messed Up The CSS */
 main {
     flex: 1;
+  color: #F0F0F0;
   background-color: #0f800f;
 }
+
+.form-control
+{
+  color: #F0F0F0;
+  background-color: #0f800f !important;
+}
+
+.table > :not(caption) > * > *
+{
+  color: #F0F0F0;
+  background-color: #0f800f !important;
+
+}
+/* Flems End */
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);

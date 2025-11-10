@@ -57,6 +57,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider
             new LoginRequestDTO { Username = userName, Password = password });
 
         string content = await response.Content.ReadAsStringAsync();
+        
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(content);
@@ -69,6 +70,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider
             })!;
 
         string serialisedData = JsonSerializer.Serialize(userDto);
+        
         await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser",
             serialisedData);
         
@@ -94,6 +96,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider
             new Claim(ClaimTypes.Name, userDto.Username),
             new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
         };
+        
         ClaimsIdentity identity = new ClaimsIdentity(claims, "apiauth");
         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
 

@@ -1,17 +1,15 @@
 ﻿@page "/Posts/{PostId:int}"
+
 @using System.Security.Claims
+
 @inject IPostService PostService
 @inject ICommentService CommentService
 @inject NavigationManager NavManager
 @inject AuthenticationStateProvider AuthProvider
 
-
-
 @if (post == null)
 {
-    <p>
-        <em>Loading...</em>
-    </p>
+    <p><em>Henter...</em></p>
 }
 else
 {

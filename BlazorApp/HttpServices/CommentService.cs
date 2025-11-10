@@ -5,17 +5,20 @@ namespace BlazorApp.HttpServices;
 
 public class CommentService : ICommentService
 {
-    private readonly HttpClient _httpClient;
+    private readonly HttpClient httpClient;
 
     public CommentService(HttpClient httpClient)
     {
-        _httpClient = httpClient;
+        // Dependency Injection
+        this.httpClient = httpClient;
     }
 
+// --------------------------------------------------------------------------
+    // -- Create Comment Async --
     public async Task<CommentDTO> CreateCommentAsync(CreateCommentDTO request)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.PostAsJsonAsync("comments", request);
+            await httpClient.PostAsJsonAsync("comments", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -27,10 +30,13 @@ public class CommentService : ICommentService
                 { PropertyNameCaseInsensitive = true })!;
     }
 
+// --------------------------------------------------------------------------
+
+    // -- Update Comment Async --
     public async Task UpdateCommentAsync(int id, UpdateCommentDTO request)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.PutAsJsonAsync($"comments/{id}", request);
+            await httpClient.PutAsJsonAsync($"comments/{id}", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -38,21 +44,26 @@ public class CommentService : ICommentService
         }
     }
 
+// --------------------------------------------------------------------------
+    // -- Get Comments Async --
     public async Task<IEnumerable<CommentDTO>> GetCommentsAsync(int? userId,
         string? authorName, int? postId,
         string? sortBy)
     {
         var comments =
-            await _httpClient.GetFromJsonAsync<List<CommentDTO>>(
+            await httpClient.GetFromJsonAsync<List<CommentDTO>>(
                 $"comments?userid={userId}&authorName={authorName}&postid={postId}&sortBy={sortBy}");
 
         return comments ?? Enumerable.Empty<CommentDTO>();
     }
 
+// --------------------------------------------------------------------------
+
+    // -- Get Single Comment By Id Async --
     public async Task<CommentDTO> GetSingleCommentByIdAsync(int id)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.GetAsync($"comments/{id}");
+            await httpClient.GetAsync($"comments/{id}");
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -64,14 +75,18 @@ public class CommentService : ICommentService
                 { PropertyNameCaseInsensitive = true })!;
     }
 
+// --------------------------------------------------------------------------
+
+    // -- Delete Comment Async --
     public async Task DeleteCommentAsync(int id)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.DeleteAsync($"comments/{id}");
+            await httpClient.DeleteAsync($"comments/{id}");
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
             throw new Exception(response);
         }
     }
+// --------------------------------------------------------------------------
 }

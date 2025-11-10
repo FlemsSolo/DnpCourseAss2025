@@ -1,9 +1,9 @@
 ﻿using ApiContracts_DTO;
 using Entities;
-using FileRepositories;
+using RepositoryContracts;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using RepositoryContracts;
 
 namespace WebAPI.Controllers;
 
@@ -20,9 +20,11 @@ public class PostsController : ControllerBase
         ICommentRepository commentRepository, IUserRepository userRepository,
         IMemoryCache cache)
     {
+        // Dependency Injection
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
+        
         this.cache = cache;
     }
 // --------------------------------------------------------------------------
@@ -35,7 +37,7 @@ public class PostsController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- Create Post
+    // -- Create Post --
     [HttpPost]
     public async Task<ActionResult<PostDTO>> CreatePost(
         [FromBody] CreatePostDTO request)
@@ -43,13 +45,13 @@ public class PostsController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Title))
         {
             throw new ArgumentException(
-                $"Title is required and cannot be empty");
+                $"Titel skal udfyldes !");
         }
         
         if (string.IsNullOrWhiteSpace(request.Body))
         {
             throw new ArgumentException(
-                $"Body is required and cannot be empty");
+                $"Indhold skal udfyldes !");
         }
         
         Post post = new(0, request.Title, request.Body, request.SubForumId, request.UserId);
@@ -71,7 +73,7 @@ public class PostsController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- Update Post
+    // -- Update Post --
     [HttpPut("{id:int}")]
     public async Task<ActionResult<PostDTO>> UpdatePost(int id,
         [FromBody] UpdatePostDTO request)
@@ -79,13 +81,13 @@ public class PostsController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Title))
         {
             throw new ArgumentException(
-                $"Title is required and cannot be empty");
+                $"Titel skal udfyldes !");
         }
         
         if (string.IsNullOrWhiteSpace(request.Body))
         {
             throw new ArgumentException(
-                $"Body is required and cannot be empty");
+                $"Indhold skal udfyldes !");
         }
         
         var post = await postRepository.GetSingleAsync(id);
@@ -114,7 +116,7 @@ public class PostsController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- Get Single Post
+    // -- Get Single Post --
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetSinglePostById(int id,
         [FromQuery] string? include)
@@ -192,12 +194,14 @@ public class PostsController : ControllerBase
     [HttpGet("/")]
     public IActionResult GetWelcomeMessage()
     {
-        return Ok("Hello, I am a PostClass Controller-based API!");
+        return Ok("TEST: Hello, I am a PostClass Controller-based API!");
     }
 // --------------------------------------------------------------------------
 
-    // -- Get Many Posts
-    // -- GET Many Posts : endpoint to retrieve all posts : http://localhost:5274/posts?title=B&userid=username&userid=authorname
+    // -- Get Many Posts --
+    
+    // -- GET Many Posts : endpoint to retrieve all posts :
+    // http://localhost:5274/posts?title=B&userid=username&userid=authorname
 
     [HttpGet]
     public async Task<ActionResult<PostDTO>> GetPosts(
@@ -280,7 +284,7 @@ public class PostsController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- Delete Post
+    // -- Delete Post --
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeletePost(int id)
     {

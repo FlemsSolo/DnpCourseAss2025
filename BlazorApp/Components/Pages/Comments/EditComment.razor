@@ -1,9 +1,11 @@
 ﻿@page "/comments/{CommentId:int}/edit"
+
 @inject ICommentService CommentService
 @inject NavigationManager NavManager
 
-<PageTitle>Edit Comment</PageTitle>
-<h3>Edit Comment</h3>
+<PageTitle>Ret Kommentar</PageTitle>
+<h3>Ret Kommentar</h3>
+
 <AuthorizeView>
     <Authorized>
         @if (!string.IsNullOrEmpty(LastSubmitResult))
@@ -50,14 +52,14 @@
 
     async Task ValidFormSubmitted()
     {
-        LastSubmitResult = "Submitting update...";
+        LastSubmitResult = "Indsender opdatering...";
         IsSucces = false;
         try
         {
             await CommentService.UpdateCommentAsync(Comment.Id,Comment);
             
 
-            LastSubmitResult = $"Success! Comment updated with ID: {Comment.Id}.";
+            LastSubmitResult = $"Success! Kommentar med ID: {Comment.Id} opdateret.";
             IsSucces = true;
 
             Comment = new UpdateCommentDTO()
@@ -69,14 +71,14 @@
         }
         catch (Exception e)
         {
-            LastSubmitResult = $"Server Error: {e.Message}";
+            LastSubmitResult = $"Server Fejl: {e.Message}";
             IsSucces = false;
         }
     }
 
     void InvalidFormSubmitted()
     {
-        LastSubmitResult = "Failure! Please correct the highlighted errors.";
+        LastSubmitResult = "Fejl! Ret venligst de markerede fejl.";
         IsSucces = false;
     }
 }

@@ -1,8 +1,11 @@
 ﻿@page "/posts/new"
+
 @using System.Security.Claims
+
 @inject IPostService PostService
 @inject AuthenticationStateProvider AuthStateProvider
-<h3>Create Post</h3>
+
+<h3>Opret opslag</h3>
 
 <AuthorizeView>
     <Authorized>
@@ -46,20 +49,20 @@
         if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
         {
             // the user is not logged in
-            LastSubmitResult = "You must be logged in to create a post.";
+            LastSubmitResult = "Du skal være logget ind for at kunne oprette et opslag.";
             IsSucces = false;
             return;
         }
 
         Post.UserId = int.Parse(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-        LastSubmitResult = "Submitting post...";
+        LastSubmitResult = "Indsender opslag...";
         IsSucces = false;
         try
         {
             CreatedPost = await PostService.CreatePostAsync(Post);
 
-            LastSubmitResult = $"Success! Post created with ID: {CreatedPost.Id}.";
+            LastSubmitResult = $"Success! Opslag oprettet med ID: {CreatedPost.Id}.";
             IsSucces = true;
 
             Post = new CreatePostDTO // reset
@@ -72,14 +75,14 @@
         }
         catch (Exception e)
         {
-            LastSubmitResult = $"Server Error: {e.Message}";
+            LastSubmitResult = $"Server Fejl: {e.Message}";
             IsSucces = false;
         }
     }
 
     void InvalidFormSubmitted()
     {
-        LastSubmitResult = "Failure! Please correct the highlighted errors.";
+        LastSubmitResult = "Fejl! Ret venligst de markerede fejl.";
         IsSucces = false;
     }
 

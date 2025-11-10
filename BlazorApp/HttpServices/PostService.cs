@@ -5,17 +5,20 @@ namespace BlazorApp.HttpServices;
 
 public class PostService : IPostService
 {
-    private readonly HttpClient _httpClient;
+    private readonly HttpClient httpClient;
 
     public PostService(HttpClient httpClient)
     {
-        _httpClient = httpClient;
+        // Dependency Injection
+        this.httpClient = httpClient;
     }
+// --------------------------------------------------------------------------
 
+    // -- Create Post Async --
     public async Task<PostDTO> CreatePostAsync(CreatePostDTO request)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.PostAsJsonAsync("posts", request);
+            await httpClient.PostAsJsonAsync("posts", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
@@ -23,36 +26,41 @@ public class PostService : IPostService
         }
 
         return JsonSerializer.Deserialize<PostDTO>(response,
-            new JsonSerializerOptions
-                { PropertyNameCaseInsensitive = true })!;
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
     }
+// --------------------------------------------------------------------------
 
+    // -- Update Post Async --
     public async Task UpdatePostAsync(int id, UpdatePostDTO request)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.PutAsJsonAsync($"posts/{id}", request);
+            await httpClient.PutAsJsonAsync($"posts/{id}", request);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
             throw new Exception(response);
         }
     }
+// --------------------------------------------------------------------------
 
+    // -- Get Posts Async --
     public async Task<IEnumerable<PostDTO>> GetPostsAsync(string? title,
         int? userId, string? authorName)
     {
         var posts =
-            await _httpClient.GetFromJsonAsync<List<PostDTO>>(
+            await httpClient.GetFromJsonAsync<List<PostDTO>>(
                 $"posts?title={title}&userId={userId}&authorName={authorName}");
 
         return posts ?? Enumerable.Empty<PostDTO>();
     }
+// --------------------------------------------------------------------------
 
+    // -- Get Post With Comment Async --
     /*
     public async Task<PostWithCommentsDTO?> GetPostWithCommentsAsync(int postId)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.GetAsync(
+            await httpClient.GetAsync(
                 $"posts?{postId}?include=comments");
         if (httpResponse.IsSuccessStatusCode)
         {
@@ -62,12 +70,14 @@ public class PostService : IPostService
         return null;
     }
     */
+// --------------------------------------------------------------------------
 
+    // -- Get Single Post By Id Async --
     public async Task<PostWithCommentsDTO> GetSinglePostByIdAsync(int id,
         string? include)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.GetAsync($"posts/{id}?include={include}");
+            await httpClient.GetAsync($"posts/{id}?include={include}");
         string response = await httpResponse.Content.ReadAsStringAsync();
 
         if (httpResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -88,15 +98,18 @@ public class PostService : IPostService
             new JsonSerializerOptions
                 { PropertyNameCaseInsensitive = true })!;
     }
+// --------------------------------------------------------------------------
 
+    // -- Delete Post Async --
     public async Task DeletePostAsync(int id)
     {
         HttpResponseMessage httpResponse =
-            await _httpClient.DeleteAsync($"posts/{id}");
+            await httpClient.DeleteAsync($"posts/{id}");
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {
             throw new Exception(response);
         }
     }
+// --------------------------------------------------------------------------
 }

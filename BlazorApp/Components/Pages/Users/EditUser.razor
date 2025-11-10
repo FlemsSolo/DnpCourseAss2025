@@ -1,13 +1,15 @@
 ﻿@page "/users/{UserId:int}/edit"
+
 @using System.Security.Claims
 @using ApiContracts_DTO.Users
 @using BlazorApp.HttpServices
+
 @inject IUserService UserService
 @inject AuthenticationStateProvider AuthProvider
 
 <AuthorizeView>
     <Authorized>
-        <h3>Edit user</h3>
+        <h3>Rediger Bruger</h3>
 
         @if (!string.IsNullOrEmpty(LastSubmitResult))
         {
@@ -52,7 +54,7 @@
     
     async Task ValidFormSubmitted()
     {
-        LastSubmitResult = "Submitting update...";
+        LastSubmitResult = "Indsender opdatering...";
         IsSucces = false;
         try
         {
@@ -74,7 +76,7 @@
                 Username = User.Username
             });
 
-            LastSubmitResult = $"Success! User updated with ID: {userId}.";
+            LastSubmitResult = $"Success! Bruger opdateret med ID: {userId}.";
             IsSucces = true;
 
             User = new UpdateUserDTO()
@@ -85,14 +87,14 @@
         }
         catch (Exception e)
         {
-            LastSubmitResult = $"Server Error: {e.Message}";
+            LastSubmitResult = $"Server Fejl: {e.Message}";
             IsSucces = false;
         }
     }
 
     void InvalidFormSubmitted()
     {
-        LastSubmitResult = "Failure! Please correct the highlighted errors.";
+        LastSubmitResult = "Fejl! Ret venligst de markerede fejl.";
         IsSucces = false;
     }
 

@@ -1,5 +1,1 @@
-[
-  {"Id":1,"Title":"bobo post","Body":"fgdfhfh dggh ghhg","SubForumId":1,"UserId":1},
-  {"Id":2,"Title":"Roof Dancing","Body":"anybody wanna go dance upon the roof ?","SubForumId":1,"UserId":2},
-  {"Id":3,"Title":"Help Me","Body":"Does anybody know the way to the next whiskey bar ?","SubForumId":3,"UserId":3}
-]
+[{"Id":1,"Title":"bobo post","Body":"fgdfhfh dggh ghhg","SubForumId":1,"UserId":1},{"Id":2,"Title":"Roof Dancing","Body":"anybody wanna go dance upon the roof ?","SubForumId":1,"UserId":2},{"Id":3,"Title":"Help Me","Body":"Does anybody know the way to the next whiskey bar ?","SubForumId":3,"UserId":3},{"Id":4,"Title":"bobo post2","Body":"fgdfhfh dggh ghhg","SubForumId":0,"UserId":1}]

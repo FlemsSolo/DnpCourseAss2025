@@ -1,57 +1,52 @@
 ﻿@page "/Comments"
+
+@attribute [StreamRendering]
+
 @inject ICommentService CommentService
 
-<PageTitle>Comments</PageTitle>
-<AuthorizeView>
-<Authorized>
-<h3>Comments</h3>
+<PageTitle>Kommentarer</PageTitle>
+        <h3>Kommentarer</h3>
 
-@if (comments == null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-else
-{
-    <div class="mb-2 w-25">
-        <SearchBox Type="number" Label="Filter by User id" Placeholder="Enter user id"
-                   OnSearchChanged="FilterByUserId"/>
-    </div>
-    <div class="mb-2 w-25">
-        <SearchBox Type="text" Label="Filter by Author" Placeholder="Enter author"
-                   OnSearchChanged="FilterByAuthor"/>
-    </div>
-    <div class="mb-2 w-25">
-        <SearchBox Type="number" Label="Filter by Post id" Placeholder="Enter post id"
-                   OnSearchChanged="FilterByPostId"/>
-    </div>
-    <div class="mb-2 w-25">
-        <SearchBox Type="text" Label="Sort by 'userid_asc', 'userid_desc', 'postid_asc' or 'postid_desc',"
-                   Placeholder="Enter sort by"
-                   OnSearchChanged="FilterBySortBy"/>
-    </div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Body</th>
-            <th>Author</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var comment in filteredComments)
+        @if (comments == null)
         {
-            <CommentListItem Comment="comment"/>
+            <p><em>Henter...</em></p>
         }
-        </tbody>
-    </table>
-    
-}
-</Authorized>
-<NotAuthorized>
-    <NotAuthorizedContent/>
-</NotAuthorized>
-</AuthorizeView>
+        else
+        {
+            <div class="mb-2 w-25">
+                <SearchBox Type="number" Label="Filtrer på Bruger id" Placeholder="Indtast Bruger id"
+                           OnSearchChanged="FilterByUserId"/>
+            </div>
+            <div class="mb-2 w-25">
+                <SearchBox Type="text" Label="Filtrer på Forfatter" Placeholder="Indtast Forfatter"
+                           OnSearchChanged="FilterByAuthor"/>
+            </div>
+            <div class="mb-2 w-25">
+                <SearchBox Type="number" Label="Filtrer på Opslag id" Placeholder="Indtast Opslag id"
+                           OnSearchChanged="FilterByPostId"/>
+            </div>
+            <div class="mb-2 w-25">
+                <SearchBox Type="text" Label="Filtrer på  'userid_asc', 'userid_desc', 'postid_asc' or 'postid_desc',"
+                           Placeholder="Indtast Filtrer på"
+                           OnSearchChanged="FilterBySortBy"/>
+            </div>
+            
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Body</th>
+                    <th>Author</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var comment in filteredComments)
+                {
+                    <CommentListItem Comment="comment"/>
+                }
+                </tbody>
+            </table>
+
+        }
 
 @code {
 

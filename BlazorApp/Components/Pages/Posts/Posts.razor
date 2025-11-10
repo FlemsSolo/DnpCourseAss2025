@@ -1,18 +1,17 @@
 ﻿@page "/Posts"
+
 @attribute [StreamRendering]
+
 @inject IPostService PostService
 
-<PageTitle>Posts</PageTitle>
+<PageTitle>Opslag</PageTitle>
+<h3>Opslag</h3>
 
-<h3>Posts</h3>
 <a href="/posts/new" class="btn btn-dark mb-3"> Lav nyt opslag</a>
-
 
 @if (posts == null)
 {
-    <p>
-        <em>Henter...</em>
-    </p>
+    <p><em>Henter...</em></p>
 }
 else
 {
@@ -45,10 +44,8 @@ else
 }
 
 @code {
-
     private IEnumerable<PostDTO>? posts;
     private IEnumerable<PostDTO>? filteredPosts = Enumerable.Empty<PostDTO>();
-
 
     private string titleFilter = string.Empty;
     private string authorFilter = string.Empty;
@@ -93,5 +90,4 @@ else
             string.IsNullOrWhiteSpace(authorFilter) ? null : authorFilter
         );
     }
-
 }

@@ -1,29 +1,28 @@
 ﻿@page "/users"
-@using BlazorApp.HttpServices
+
 @attribute [StreamRendering]
+
 @inject IUserService UserService
 
-<PageTitle>Users</PageTitle>
+<PageTitle>Brugere</PageTitle>
+<h3>Brugere</h3>
 
-<h1>Users</h1>
-<a href="/users/new" class="btn btn-dark mb-3"> Create New User</a>
+<a href="/users/new" class="btn btn-dark mb-3"> Opret Ny Bruger</a>
 
 @if (users == null)
 {
-    <p>
-        <em>Loading...</em>
-    </p>
+    <p><em>Henter...</em></p>
 }
 else
 {
     <div class="mb-2 w-25">
-        <SearchBox Type="text" Label="Search by starts with username"
-                   Placeholder="Enter starts with username"
+        <SearchBox Type="text" Label="Filtrer på starter med Brugernavn"
+                   Placeholder="Indtast starter med Brugernavn"
                    OnSearchChanged="FilterByStartsWith"/>
     </div>
     <div class="mb-2 w-25">
-        <SearchBox Type="text" Label="Sort by 'id_asc', 'id_desc' or 'username'"
-                   Placeholder="Enter sort by"
+        <SearchBox Type="text" Label="Filtrer på 'id_asc', 'id_desc' or 'username'"
+                   Placeholder="Indtast Filtrer på"
                    OnSearchChanged="FilterBySortBy"/>
     </div>
     <table class="table">

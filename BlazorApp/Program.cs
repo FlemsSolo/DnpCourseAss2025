@@ -12,11 +12,14 @@ builder.Services
 
 builder.Services.AddScoped(sp => new HttpClient 
 {
-    // Web API https value from launchSettings.json
+    // Web API https value from WebApi/Properties/launchSettings.json
     // Notice : https protocol
     BaseAddress = new Uri("https://localhost:7047")
+    //BaseAddress = new Uri("http://localhost:5274")
 });
 
+// Dependency Injection
+// We must register all ”services”, which the Blazor App (HttpClient) controller can request
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();

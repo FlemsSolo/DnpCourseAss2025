@@ -1,4 +1,6 @@
 ﻿@page "/Login"
+
+// The compiler creates the injection property.
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager NavManager
 
@@ -6,6 +8,7 @@
     <NotAuthorized>
         <div class="d-flex flex-column align-items-center gap-3 w-50 mx-auto m-5">
             <h1>Velkommen tilbage !</h1>
+            
             <input class="form-control" @bind="Username"
                    placeholder="Brugernavn"/>
             <input class="form-control" type="password" @bind="Password"
@@ -38,15 +41,16 @@
     private async Task LoginAsync()
     {
         errorMessage = string.Empty;
+        
         try
-        {
+        {   // Authentication/SimpleAuthProvider.cs
             await ((SimpleAuthProvider) AuthProvider).LoginASync(Username, Password);
             NavManager.NavigateTo("/");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            errorMessage = $"Error: {e.Message}";
+            errorMessage = $"Fejl: {e.Message}";
         }
     }
 

@@ -17,7 +17,9 @@ public class UsersController : ControllerBase
 
     public UsersController(IUserRepository userRepository, IMemoryCache cache)
     {
+        // Dependency Injection
         this.userRepository = userRepository;
+        
         this.cache = cache;
     }
 // --------------------------------------------------------------------------
@@ -29,7 +31,7 @@ public class UsersController : ControllerBase
                 u.Name.Equals(username)))
         {
             throw new InvalidOperationException(
-                $"Username '{username}' is already taken.");
+                $"Brugernavn '{username}' er allerede brugt. Angiv nyt.");
         }
     }
 // --------------------------------------------------------------------------
@@ -41,7 +43,9 @@ public class UsersController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- Create User : https://localhost:7047/users + POST + BODY { UserName: "xx", Password: "xx" }
+    // -- Create User -- (Add User)
+    // https://localhost:7047/users + POST + BODY { UserName: "xx", Password: "xx" }
+    
     [HttpPost]
     public async Task<ActionResult<UserDTO>> CreateUser(
         [FromBody] CreateUserDTO request)
@@ -49,30 +53,41 @@ public class UsersController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Username))
         {
             throw new ArgumentException(
-                $"Username is required and cannot be empty");
+                $"Brugernavn skal udfyldes !");
         }
         
         if (string.IsNullOrWhiteSpace(request.Password))
         {
             throw new ArgumentException(
-                $"Password is required and cannot be empty");
+                $"Password skal udfyldes");
         }
 
-        await VerifyUserNameIsAvailableAsync(request.Username);
-
-        //User user = new(0, request.Username, request.Password);
-        User user = new User{Name = request.Username, Pw = request.Password};
-        User created = await userRepository.AddAsync(user);
-        UserDTO dto = new()
+        try // Try Catch Example : Could be multiple catch depending on error
         {
-            Id = created.Id,
-            Username = created.Name
-        };
-        return Created($"/Users/{dto.Id}", dto);
+            await VerifyUserNameIsAvailableAsync(request.Username);
+
+            //User user = new(0, request.Username, request.Password); // OldStyle
+            User user = new User{Name = request.Username, Pw = request.Password};
+            User created = await userRepository.AddAsync(user);
+            UserDTO dto = new()
+            {
+                Id = created.Id,
+                Username = created.Name
+            };
+        
+            return Created($"/Users/{dto.Id}", dto);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
     }
 // --------------------------------------------------------------------------
 
-    // -- Update UserName : PUT + BODY + { "id": 3, "Username": "Chris Coloumbus", "Password": null }
+    // -- Update UserName --
+    // PUT + BODY + { "id": 3, "Username": "Chris Coloumbus", "Password": null }
+    
     [HttpPut("{id:int}")]
     public async Task<ActionResult<UpdateUsernameDTO>> UpdateUsername(int id,
         [FromBody] UserDTO request)
@@ -80,7 +95,7 @@ public class UsersController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Username))
         {
             throw new ArgumentException(
-                $"Username is required and cannot be empty");
+                $"Brugernavn skal udfyldes !");
         }
         
         User user = await userRepository.GetSingleAsync(id);
@@ -104,7 +119,8 @@ public class UsersController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- Update Password
+    // -- Update Password --
+    
     [HttpPut("{id:int}/password")]
     public async Task<ActionResult<UpdateUserPasswordDTO>> UpdatePassword(
         int id,
@@ -113,7 +129,7 @@ public class UsersController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Password))
         {
             throw new ArgumentException(
-                $"Password is required and cannot be empty");
+                $"Password skal udfyldes !");
         }
         
         User user = await userRepository.GetSingleAsync(id);
@@ -137,7 +153,9 @@ public class UsersController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- GetSingle User : https://localhost:7047/users/1
+    // -- GetSingle User --
+    // https://localhost:7047/users/1
+    
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetSingleUserById(int id)
     {
@@ -162,8 +180,10 @@ public class UsersController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- GET Many Users : endpoint to retrieve all users : http://localhost:5274/users
-    // -- GET Many Users : endpoint to retrieve all users : http://localhost:5274/users?startsWith=B&sortBy=username
+    // -- GET Many Users --
+    // -- GET Many Users : endpoint to retrieve all users :
+    // http://localhost:5274/users?startsWith=B&sortBy=username
+    
     [HttpGet]
     public async Task<ActionResult<UserDTO>> GetUsers(
         [FromQuery] string? startsWith,
@@ -194,8 +214,7 @@ public class UsersController : ControllerBase
 
         var filteredUsers = users;
 
-
-        // Filter
+        // -- Filter --
         
         // Filter StartsWith ----------------------------
         if (!string.IsNullOrWhiteSpace(startsWith))
@@ -232,7 +251,9 @@ public class UsersController : ControllerBase
     } 
 // --------------------------------------------------------------------------
     
-    // -- Delete User : https://localhost:7047/users + DELETE + BODY { id: x }
+    // -- Delete User --
+    // https://localhost:7047/users + DELETE + BODY { id: x }
+    
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteUser(int id)
     {

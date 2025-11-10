@@ -1,8 +1,9 @@
 ﻿using ApiContracts_DTO;
 using Entities;
+using RepositoryContracts;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using RepositoryContracts;
 
 namespace WebAPI.Controllers;
 
@@ -10,30 +11,32 @@ namespace WebAPI.Controllers;
 [Route("[controller]")]
 public class CommentsController : ControllerBase
 {
-    private readonly ICommentRepository _commentRepository;
-    private readonly IUserRepository _userRepository;
-    private readonly IPostRepository _postRepository;
-    private readonly IMemoryCache _cache;
+    private readonly ICommentRepository commentRepository;
+    private readonly IUserRepository userRepository;
+    private readonly IPostRepository postRepository;
+    private readonly IMemoryCache cache;
 
     public CommentsController(ICommentRepository commentRepository,
         IUserRepository userRepository, IPostRepository postRepository,
         IMemoryCache cache)
     {
-        _commentRepository = commentRepository;
-        _userRepository = userRepository;
-        _postRepository = postRepository;
-        _cache = cache;
+        // Dependency Injection
+        this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+        this.postRepository = postRepository;
+        
+        this.cache = cache;
     }
 // --------------------------------------------------------------------------
-
     private void CacheInvalidate(int id)
     {
-        _cache.Remove($"allComments-{id}");
-        _cache.Remove("allComments");
+        cache.Remove($"allComments-{id}");
+        cache.Remove("allComments");
     }
 // --------------------------------------------------------------------------
 
-    // -- Create Comment
+    // -- Create Comment --
+    
     [HttpPost]
     public async Task<ActionResult<CommentDTO>> CreateComment(
         [FromBody] CreateCommentDTO request)
@@ -41,13 +44,13 @@ public class CommentsController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Body))
         {
             throw new ArgumentException(
-                $"Body is required and cannot be empty");
+                $"Indhold skal udfyldes !");
         }
         
-        User author = await _userRepository.GetSingleAsync(request.UserId);
-        await _postRepository.GetSingleAsync(request.PostId);
+        User author = await userRepository.GetSingleAsync(request.UserId);
+        await postRepository.GetSingleAsync(request.PostId);
         Comment comment = new(0, request.Body, request.PostId, request.UserId);
-        Comment created = await _commentRepository.AddAsync(comment);
+        Comment created = await commentRepository.AddAsync(comment);
 
 
         // Cache invalidation
@@ -59,14 +62,15 @@ public class CommentsController : ControllerBase
             Body = created.Body,
             PostId = created.PostId,
             UserId = created.UserId,
-            Author = new UserDTO()
-                { Id = author.Id, Username = author.Name }
+            Author = new UserDTO() { Id = author.Id, Username = author.Name }
         };
+        
         return Created($"/Comments/{dto.Id}", dto);
     }
 // --------------------------------------------------------------------------
 
-    // -- Update Comment
+    // -- Update Comment --
+    
     [HttpPut("{id:int}")]
     public async Task<ActionResult<CommentDTO>> UpdateComment(int id,
         [FromBody] UpdateCommentDTO request)
@@ -74,20 +78,20 @@ public class CommentsController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Body))
         {
             throw new ArgumentException(
-                $"Body is required and cannot be empty");
+                $"Indhold skal udfyldes !");
         }
-        var comment = await _commentRepository.GetSingleAsync(id);
+        var comment = await commentRepository.GetSingleAsync(id);
         
         // Only Body updates
         var updatedComment = new Comment(comment.Id, request.Body,
             comment.PostId, comment.UserId);
-        await _commentRepository.UpdateAsync(updatedComment);
+        await commentRepository.UpdateAsync(updatedComment);
 
         // Cache invalidation
         CacheInvalidate(id);
 
         var author =
-            await _userRepository.GetSingleAsync(updatedComment.UserId);
+            await userRepository.GetSingleAsync(updatedComment.UserId);
 
         var dto = new CommentDTO()
         {
@@ -103,20 +107,21 @@ public class CommentsController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- Get Single Comment
+    // -- Get Single Comment --
+    
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetSingleCommentById(int id)
     {
         string cacheKey = $"comment-{id}";
 
         // cache check
-        if (_cache.TryGetValue(cacheKey, out CommentDTO? cachedResult))
+        if (cache.TryGetValue(cacheKey, out CommentDTO? cachedResult))
         {
             return Ok(cachedResult);
         }
 
-        var comment = await _commentRepository.GetSingleAsync(id);
-        var author = await _userRepository.GetSingleAsync(comment.UserId);
+        var comment = await commentRepository.GetSingleAsync(id);
+        var author = await userRepository.GetSingleAsync(comment.UserId);
 
         var commentDto = new CommentDTO
         {
@@ -125,7 +130,7 @@ public class CommentsController : ControllerBase
                 { Id = author.Id, Username = author.Name }
         };
 
-        _cache.Set(cacheKey, commentDto, new MemoryCacheEntryOptions()
+        cache.Set(cacheKey, commentDto, new MemoryCacheEntryOptions()
         {
             SlidingExpiration = TimeSpan.FromMinutes(2),
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
@@ -135,7 +140,8 @@ public class CommentsController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- GetMany Comments
+    // -- GetMany Comments --
+    
     [HttpGet]
     public async Task<ActionResult<CommentDTO>> GetComments(
         [FromQuery] int? userid,
@@ -145,14 +151,14 @@ public class CommentsController : ControllerBase
     {
         string allCommentsCacheKey = "allComments";
 
-        if (!_cache.TryGetValue(allCommentsCacheKey,
+        if (!cache.TryGetValue(allCommentsCacheKey,
                 out IEnumerable<Comment>? cachedComments))
         {
-            cachedComments = _commentRepository
+            cachedComments = commentRepository
                 .GetMany()
                 .ToList();
             
-            _cache.Set(allCommentsCacheKey, cachedComments,
+            cache.Set(allCommentsCacheKey, cachedComments,
                 new MemoryCacheEntryOptions()
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
@@ -161,7 +167,7 @@ public class CommentsController : ControllerBase
 
         var filteredComments = cachedComments;
 
-        // Filters
+        // -- Filters --
         
         // Filter userid -----------------------------
         if (userid.HasValue)
@@ -180,12 +186,12 @@ public class CommentsController : ControllerBase
         var userIds =
             filteredComments.Select(c => c.UserId).Distinct(); // no duplicates
         // Map to UserDTO
-        var users = _userRepository
+        var users = userRepository
             .GetMany()
             .Where(u => userIds
                 .Contains(u.Id))
                 .Select(u => new UserDTO()
-                { Id = u.Id, Username = u.Name })
+                    { Id = u.Id, Username = u.Name })
             .ToList();
 
         // Filter authorName -------------------------------------
@@ -230,11 +236,12 @@ public class CommentsController : ControllerBase
     }
 // --------------------------------------------------------------------------
 
-    // -- Delete Comment
+    // -- Delete Comment --
+    
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteComment(int id)
     {
-        await _commentRepository.DeleteAsync(id);
+        await commentRepository.DeleteAsync(id);
 
         CacheInvalidate(id);
 
