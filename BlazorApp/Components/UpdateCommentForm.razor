@@ -3,11 +3,11 @@
     <DataAnnotationsValidator/>
     <ValidationSummary class="alert alert-warning"/>
     <div class="form-group">
-        <label for="Body">Body</label>
+        <label for="Body">Indhold</label>
         <InputText @bind-Value="Comment.Body" class="form-control" id="Body"/>
         <ValidationMessage For="@(() => Comment.Body)"/>
     </div>
-    <input type="submit" class="btn btn-primary" value="Save"/>
+    <input type="submit" class="btn btn-primary" value="Gem"/>
 </EditForm>
 
 

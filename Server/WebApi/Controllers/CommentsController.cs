@@ -49,6 +49,7 @@ public class CommentsController : ControllerBase
         
         User author = await userRepository.GetSingleAsync(request.UserId);
         await postRepository.GetSingleAsync(request.PostId);
+        
         Comment comment = new(0, request.Body, request.PostId, request.UserId);
         Comment created = await commentRepository.AddAsync(comment);
 

@@ -6,11 +6,11 @@
         {
             <button class="btn btn-dark"
                     @onclick="() => OnDelete.InvokeAsync(Comment.Id)">
-                Delete Comment
+                Slet Kommentar
             </button>
             <button class="btn btn-dark"
                     @onclick="@(() => NavManager.NavigateTo($"/comments/{Comment.Id}/edit"))">
-                Edit Comment
+                Rediger Kommentar
             </button>
         }</td>
 </tr>

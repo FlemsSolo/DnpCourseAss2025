@@ -50,8 +50,8 @@ public class CreateUserView
                 break; // valid password
         }
 
-        //var user = new User(0, username, password);
-        var user = new User{Name = username, Pw = password};
+        var user = new User(0, username, password);
+        //var user = new User {Name = username, Pw = password};
         
         // AddAsync Takes Care Of The post.id == 0 And Gives It A Proper ID
         var created = await userRepository.AddAsync(user);

@@ -47,7 +47,10 @@ public class SimpleAuthProvider : AuthenticationStateProvider
         };
         ClaimsIdentity identity = new ClaimsIdentity(claims, "apiauth");
         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
-        return new AuthenticationState(claimsPrincipal);
+        
+        // The ?? is a null coalescing operator. It will check if claimsPrincipal is null,
+        // and if so, then return the part after the ??, i.e. a new instance of ClaimsPrincipal.
+        return new AuthenticationState(claimsPrincipal ?? new ());
     }
 
     public async Task LoginASync(string userName, string password)
@@ -82,8 +85,10 @@ public class SimpleAuthProvider : AuthenticationStateProvider
     {
         await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser",
             "");
+        
+        ClaimsPrincipal currentClaimsPrincipal = new();
         NotifyAuthenticationStateChanged(
-            Task.FromResult(new AuthenticationState(new())));
+            Task.FromResult(new AuthenticationState(currentClaimsPrincipal)));
     }
     
     public async Task RefreshUser(UserDTO userDto)

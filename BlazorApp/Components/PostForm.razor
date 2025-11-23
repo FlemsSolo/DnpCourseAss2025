@@ -3,13 +3,13 @@
     <DataAnnotationsValidator/>
     <ValidationSummary class="alert alert-warning"/>
     <div class="form-group">
-        <label for="Title">Title</label>
+        <label for="Title">Titel</label>
         <InputText @bind-Value="Post.Title" class="form-control" id="Title"/>
         <!-- Display specific error message -->
         <ValidationMessage For="@(() => Post.Title)"/>
     </div>
     <div class="form-group">
-        <label for="Body">Body</label>
+        <label for="Body">Indhold</label>
         <InputText @bind-Value="Post.Body" class="form-control" id="Body"/>
         <ValidationMessage For="@(() => Post.Body)"/>
     </div>

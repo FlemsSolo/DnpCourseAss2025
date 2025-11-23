@@ -2,6 +2,7 @@
 using ApiContracts_DTO.Users;
 using Entities;
 using RepositoryContracts;
+using EfcRepositories;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -14,37 +15,49 @@ public class UsersController : ControllerBase
 {
     private readonly IUserRepository userRepository;
     private readonly IMemoryCache cache;
+    private readonly IPostRepository postRepository; // Maybe Use Later On
+    private readonly ICommentRepository commentRepository; // Maybe Use Later On
 
     public UsersController(IUserRepository userRepository, IMemoryCache cache)
     {
         // Dependency Injection
         this.userRepository = userRepository;
-        
         this.cache = cache;
     }
 // --------------------------------------------------------------------------
 
     private async Task VerifyUserNameIsAvailableAsync(string username)
     {
-        var users = userRepository.GetMany();
-        if (users.Any(u =>
-                u.Name.Equals(username)))
+        try
         {
+            var user = await userRepository.GetByUsernameAsync(username);
+
+            // If User already exists throw exception
             throw new InvalidOperationException(
                 $"Brugernavn '{username}' er allerede brugt. Angiv nyt.");
         }
+        catch (InvalidOperationException e)
+        {
+            if (!e.Message.Contains("Ej Fundet !"))
+            {
+                throw; // some other error related to user -> throw unspecified exception
+            }
+            // Could be "not found" error from repository -> 
+            // ignore catch since username is available then
+        }
+         
     }
 // --------------------------------------------------------------------------
 
-    private void CacheInvalidate(int id)
+    /*private void CacheInvalidate(int id)
     {
         cache.Remove($"user-{id}");
         cache.Remove("allUsers");
-    }
+    }*/
 // --------------------------------------------------------------------------
 
     // -- Create User -- (Add User)
-    // https://localhost:7047/users + POST + BODY { UserName: "xx", Password: "xx" }
+    // https://localhost:7047/users + POS + BODY { UserName: "xx", Password: "xx" }
     
     [HttpPost]
     public async Task<ActionResult<UserDTO>> CreateUser(
@@ -66,9 +79,9 @@ public class UsersController : ControllerBase
         {
             await VerifyUserNameIsAvailableAsync(request.Username);
 
-            //User user = new(0, request.Username, request.Password); // OldStyle
-            User user = new User{Name = request.Username, Pw = request.Password};
+            User user = new(0, request.Username, request.Password);
             User created = await userRepository.AddAsync(user);
+            
             UserDTO dto = new()
             {
                 Id = created.Id,
@@ -79,7 +92,7 @@ public class UsersController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(e); // Test
             return StatusCode(500, e.Message);
         }
     }
@@ -99,19 +112,18 @@ public class UsersController : ControllerBase
         }
         
         User user = await userRepository.GetSingleAsync(id);
+        
         if (user.Name != request.Username)
         {
             await VerifyUserNameIsAvailableAsync(request.Username);
         }
         
         // Only update username
-        //user = new(user.Id, request.Username, user.Pw);
-        user = new User{Name = request.Username, Pw = null};
-
+        //User user = new(0, request.Username);
 
         await userRepository.UpdateAsync(user);
 
-        CacheInvalidate(id);
+        //CacheInvalidate(id);
 
         var dto = new UserDTO() { Id = user.Id, Username = user.Name };
 
@@ -136,11 +148,12 @@ public class UsersController : ControllerBase
         
         // Only update password
         //user = new(user.Id, user.Username, request.Password);
-        user = new User{Name = null, Pw = request.Password};
+        //user = new User{Name = null, Pw = request.Password};
+        //User user = new(0, null, request.Password);
 
         await userRepository.UpdateAsync(user);
 
-        CacheInvalidate(id);
+        //CacheInvalidate(id);
 
         var dto = new UpdateUserPasswordDTO()
         {

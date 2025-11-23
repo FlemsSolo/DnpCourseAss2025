@@ -4,7 +4,7 @@
     <DataAnnotationsValidator/>
     <ValidationSummary class="alert alert-warning"/>
     <div class="form-group">
-        <label for="Username">Username</label>
+        <label for="Username">Brugernavn</label>
         <InputText @bind-Value="User.Username" class="form-control" id="Username"/>
         <!-- Display specific error message -->
         <ValidationMessage For="@(() => User.Username)"/>

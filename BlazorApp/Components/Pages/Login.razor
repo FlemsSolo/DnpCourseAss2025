@@ -1,6 +1,7 @@
 ﻿@page "/Login"
 
-// The compiler creates the injection property.
+<!-- The compiler creates the injection property. -->
+
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager NavManager
 
@@ -33,6 +34,7 @@
 
 @code 
 {
+// -----------------------------------------------------------------------------------------
     private string Username { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
     private string? errorMessage { get; set; } = string.Empty;
@@ -43,7 +45,8 @@
         errorMessage = string.Empty;
         
         try
-        {   // Authentication/SimpleAuthProvider.cs
+        {   
+            // Authentication/SimpleAuthProvider.cs
             await ((SimpleAuthProvider) AuthProvider).LoginASync(Username, Password);
             NavManager.NavigateTo("/");
         }

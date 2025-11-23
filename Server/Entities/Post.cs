@@ -10,6 +10,8 @@ public class Post
     public int SubForumId { get; set; }
     public int UserId { get; set; }
 
+    private Post(){} // Private NoArgs Constructor Used In EFC (Entity Framework Core)
+    
     // Constructor
     public Post(int id, string title, string body, int subForumId, int userId)
     {

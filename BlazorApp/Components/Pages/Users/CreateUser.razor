@@ -13,12 +13,13 @@
         @LastSubmitResult
     </h2>
 }
+
 <UserForm User="User"
           OnValidSubmit="ValidFormSubmitted"
           OnInvalidSubmit="InvalidFormSubmitted"/>
 
 @code {
-
+// -----------------------------------------------------------------------------
     CreateUserDTO User = new CreateUserDTO
     {
         Username = null,
