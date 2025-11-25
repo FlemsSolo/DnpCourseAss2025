@@ -3,7 +3,6 @@ using System.Text.Json;
 using ApiContracts_DTO;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-using StudHub.SharedDTO;
 
 namespace BlazorApp.Components.Authentication;
 
@@ -15,6 +14,7 @@ public class SimpleAuthProvider : AuthenticationStateProvider
 
     public SimpleAuthProvider(HttpClient httpClient, IJSRuntime jsRuntime)
     {
+        // Dependency Injection
         this.httpClient = httpClient;
         this.jsRuntime = jsRuntime;
     }
@@ -40,33 +40,41 @@ public class SimpleAuthProvider : AuthenticationStateProvider
         }
 
         UserDTO userDto = JsonSerializer.Deserialize<UserDTO>(userAsJson)!;
+        
         List<Claim> claims = new List<Claim>()
         {
             new Claim(ClaimTypes.Name, userDto.Username),
             new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString()),
         };
+        
         ClaimsIdentity identity = new ClaimsIdentity(claims, "apiauth");
         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
         
         // The ?? is a null coalescing operator. It will check if claimsPrincipal is null,
         // and if so, then return the part after the ??, i.e. a new instance of ClaimsPrincipal.
-        return new AuthenticationState(claimsPrincipal ?? new ());
+        //return new AuthenticationState(claimsPrincipal ?? new ());
+        
+        return new AuthenticationState(claimsPrincipal);
     }
 
     public async Task LoginASync(string userName, string password)
     {
+        Console.WriteLine("LoginASync(): " + userName + ", " + password);
+        // httpClient Is Used To Contact The Web API
         HttpResponseMessage response = await httpClient.PostAsJsonAsync(
             "auth/login",
             new LoginRequestDTO { Username = userName, Password = password });
 
         string content = await response.Content.ReadAsStringAsync();
+        Console.WriteLine("Response: " + content);
+        Console.WriteLine("response.IsSuccessStatusCode: " + response.IsSuccessStatusCode);
         
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(content);
         }
 
-        UserDTO userDto = JsonSerializer.Deserialize<UserDTO>(content,
+        /*UserDTO userDto = JsonSerializer.Deserialize<UserDTO>(content,
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -77,7 +85,21 @@ public class SimpleAuthProvider : AuthenticationStateProvider
         await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser",
             serialisedData);
         
-        await RefreshUser(userDto);
+        await RefreshUser(userDto);*/
+        
+        // LoginResponseDTO instead of UserDTO for web api JWT testing (httpie)
+        LoginResponseDTO loginResponse = JsonSerializer.Deserialize<LoginResponseDTO>(content,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            })!;
+
+        string serialisedData = JsonSerializer.Serialize(loginResponse);
+        await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser",
+            serialisedData);
+
+        await RefreshUser(loginResponse.User);
+
         
     }
 
@@ -86,9 +108,12 @@ public class SimpleAuthProvider : AuthenticationStateProvider
         await jsRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser",
             "");
         
-        ClaimsPrincipal currentClaimsPrincipal = new();
+        /*ClaimsPrincipal currentClaimsPrincipal = new();
         NotifyAuthenticationStateChanged(
-            Task.FromResult(new AuthenticationState(currentClaimsPrincipal)));
+            Task.FromResult(new AuthenticationState(currentClaimsPrincipal)));*/
+        NotifyAuthenticationStateChanged(
+            Task.FromResult(new AuthenticationState(new())));
+
     }
     
     public async Task RefreshUser(UserDTO userDto)

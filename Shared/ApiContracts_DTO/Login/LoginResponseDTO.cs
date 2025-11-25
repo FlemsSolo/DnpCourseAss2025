@@ -1,6 +1,6 @@
 ﻿using ApiContracts_DTO;
 
-namespace StudHub.SharedDTO;
+namespace ApiContracts_DTO;
 
 public class LoginResponseDTO
 {

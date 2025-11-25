@@ -1,7 +1,7 @@
 ﻿using ApiContracts_DTO;
 using Entities;
 using RepositoryContracts;
-using StudHub.SharedDTO;
+
 
 using System.Security.Claims;
 using System.Text;
@@ -20,10 +20,11 @@ public class AuthController : ControllerBase
 
     public AuthController(IUserRepository userRepository)
     {
+        // Dependency Injection
         this.userRepository = userRepository;
     }
 
-    // -- Login --
+    // -- Login POST EndPoint -- 
     
     [HttpPost("login")]
     public async Task<ActionResult<UserDTO>> Login(
@@ -31,6 +32,7 @@ public class AuthController : ControllerBase
     {
         User user;
         
+        // Find User
         try
         {
             user = await userRepository.GetByUsernameAsync(request.Username);
@@ -40,17 +42,20 @@ public class AuthController : ControllerBase
             throw new UnauthorizedAccessException("Forkert Brugernavn");
         }
 
+        // Find Password
         if (user.Pw != request.Password)
         {
             throw new UnauthorizedAccessException("Forkert Password");
         }
 
+        // SetUp Claims
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Name)
         };
 
+        
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SuperSecretKeyThatIsAtMinimum32CharactersLong"));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -64,12 +69,14 @@ public class AuthController : ControllerBase
 
         var jwt = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().WriteToken(token);
 
+        // Convert User To DTO To Hide Password
         var userDTO = new UserDTO
         {
             Id = user.Id,
             Username = user.Name
         };
 
+        // Return UserDTO And JasonWebToken
         return Ok( new { User = userDTO, Token = jwt });
     }
 }

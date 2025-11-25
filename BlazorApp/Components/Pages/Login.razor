@@ -1,8 +1,8 @@
-﻿@page "/Login"
+﻿@page "/login"
 
 <!-- The compiler creates the injection property. -->
-
-@inject AuthenticationStateProvider AuthProvider
+// We Get Our SimpleAuthProvider
+@inject AuthenticationStateProvider AuthProvider 
 @inject NavigationManager NavManager
 
 <AuthorizeView>
@@ -35,8 +35,8 @@
 @code 
 {
 // -----------------------------------------------------------------------------------------
-    private string Username { get; set; } = string.Empty;
-    private string Password { get; set; } = string.Empty;
+    private string Username { get; set; } = "Benny Bomstaerk"; //string.Empty;
+    private string Password { get; set; } = "DontGetACold"; //string.Empty;
     private string? errorMessage { get; set; } = string.Empty;
 
 
@@ -53,7 +53,7 @@
         catch (Exception e)
         {
             Console.WriteLine(e);
-            errorMessage = $"Fejl: {e.Message}";
+            errorMessage = $"Login Fejl: {e.Message}";
         }
     }
 

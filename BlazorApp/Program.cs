@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BlazorApp.Components;
 using BlazorApp.Components.Authentication;
 using BlazorApp.HttpServices;
@@ -14,8 +15,8 @@ builder.Services.AddScoped(sp => new HttpClient
 {
     // Web API https value from WebApi/Properties/launchSettings.json
     // Notice : https protocol
-    BaseAddress = new Uri("https://localhost:7047")
-    //BaseAddress = new Uri("http://localhost:5274")
+    //BaseAddress = new Uri("https://localhost:7047") // This Adress Dont Work
+    BaseAddress = new Uri("http://localhost:5274")
 });
 
 // Dependency Injection
@@ -25,8 +26,17 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthProvider>();
 
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddAuthorizationCore();
+//builder.Services.AddCascadingAuthenticationState();
+//builder.Services.AddAuthorizationCore();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("OG", policy =>
+        policy.RequireAssertion(context =>
+            context.User.HasClaim(claim =>
+                claim.Type == ClaimTypes.NameIdentifier &&
+                int.TryParse(claim.Value, out var id) && id <= 10)));
+});
 
 var app = builder.Build();
 
@@ -39,6 +49,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseAuthorization();
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();

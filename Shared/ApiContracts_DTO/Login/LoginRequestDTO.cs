@@ -1,4 +1,4 @@
-﻿namespace StudHub.SharedDTO;
+﻿namespace ApiContracts_DTO;
 
 public class LoginRequestDTO
 {
